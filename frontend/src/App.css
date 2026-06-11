@@ -1,0 +1,194 @@
+
+/* user role page */
+.user-role-container{
+  background-image: linear-gradient(to right, rgb(253, 29, 29),rgb(254, 254, 28));
+}
+.role-div:hover{
+  background-color: aqua;
+}
+
+@media(max-width:768px){
+  .user-role-container{
+  background-image: linear-gradient(to right, rgb(250, 81, 81),rgb(252, 252, 81));
+}
+}
+
+/* admin login page */
+
+.admin-login-container{
+  background-image: url("./assets/log1.jpg");
+  background-size: cover;
+}
+
+@media(max-width:768px){
+  .admin-login-container{
+  background-image: url("./assets/img1.jpg");
+  background-size: cover;
+}
+.admin-form{
+    border: 1px solid white;
+  box-shadow: 0 0 20px white;
+}
+}
+
+/* department container */
+
+.department-container{
+  background-image: linear-gradient(to bottom, rgb(98, 143, 240), rgb(249, 157, 247));
+}
+
+
+@keyframes slideInOneByOne {
+  0% {
+    transform: translateX(-800px);
+    opacity: 0;
+  }
+
+  70% {
+    transform: translateX(30px);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-card {
+  animation: slideInOneByOne 1s ease-out forwards;
+  animation-duration: 5s;
+}
+@media(max-width:468px){
+  @keyframes slideInOneByOne {
+  0% {
+    transform: translateX(-300px);
+    opacity: 0;
+  }
+
+  70% {
+    transform: translateX(20px);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-card {
+  animation: slideInOneByOne 1s ease-out forwards;
+  animation-duration: 3s;
+}
+}
+
+/* admin dashboard */
+
+/* .admin-dashboard-div1{
+width: 10%;
+}
+.admin-dashboard-div2{
+width: 90%;
+} */
+/* 
+.admin-box1-animation{
+  animation: adminBox 1s ease-out forwards;
+  animation-duration: 3s;
+}
+@keyframes adminBox{
+  0%{
+    transform: translateY(300px);
+    opacity: 0;
+  }
+  75%{
+    transform: translateY(20px);
+    opacity: 1;
+  }
+  100%{
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+}
+
+.admin-box2-animation{
+  animation: adminBox 1s ease-out forwards;
+  animation-duration: 4s;
+}
+@keyframes adminBox{
+  0%{
+    transform: translateY(300px);
+    opacity: 0;
+  }
+  75%{
+    transform: translateY(50px);
+    opacity: 1;
+  }
+  100%{
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+
+}
+
+.admin-box3-animation{
+  animation: adminBox 1s ease-out forwards;
+  animation-duration: 6s;
+}
+@keyframes adminBox{
+  0%{
+    transform: translateY(300px);
+    opacity: 0;
+  }
+  75%{
+    transform: translateY(50px);
+    opacity: 1;
+  }
+  100%{
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+
+} */
+
+@keyframes adminBox {
+0% {
+    transform: translateY(200px);
+    opacity: 0;
+  }
+
+  70% {
+    transform: translateY(-20px);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.admin-box1-animation,
+.admin-box2-animation,
+.admin-box3-animation {
+  opacity: 0;
+  animation: adminBox 0.8s ease-out forwards;
+}
+
+.admin-box1-animation {
+  animation-delay: 0.2s;
+  animation-duration: 2s;
+}
+
+.admin-box2-animation {
+  animation-delay: 0.4s;
+  animation-duration: 3s;
+}
+
+.admin-box3-animation {
+  animation-delay: 0.6s;
+  animation-duration: 4s;
+}
