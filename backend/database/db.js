@@ -1,9 +1,9 @@
-const sql = require("mysql2")
+import sql from "mysql2"
 
 const db = sql.createConnection({
     host : "localhost",
     user  : "root",
-    password : "",
+    password : "root@123",
     database : "sams"
 })
 
@@ -16,4 +16,4 @@ db.connect((err)=>{
     
 })
 
-module.exports = db;
+export default db;
