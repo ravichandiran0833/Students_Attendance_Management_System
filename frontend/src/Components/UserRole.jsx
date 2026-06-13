@@ -13,21 +13,21 @@ export const UserRole = () => {
             className="role-div px-4 py-2 text-center bg-white md:px-6 md:py-3 lg:px-6 lg:py-3 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.25)]  hover:-translate-y-2  delay-200 ease-in-out hover:shadow-[0_20px_40px_rgba(0,0,0,0.35)]
                   transition-all duration-30 "
           >
-            <Link to="/admin_login">Admin</Link>
+            <Link to="/admin-login">Admin</Link>
           </div>
           <div
             className="role-div px-4 py-2 text-center bg-white md:px-6 md:py-3 lg:px-6 lg:py-3 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.25)] hover:-translate-y-2  delay-200 ease-in-out
                   hover:shadow-[0_20px_40px_rgba(0,0,0,0.35)]
                   transition-all duration-300"
           >
-            <Link to="/Teacher_login">Teacher</Link>
+            <Link to="/Teacher-login">Teacher</Link>
           </div>
           <div
             className="role-div px-4 py-2 text-center bg-white md:px-6 md:py-3 lg:px-6 lg:py-3 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.25)] hover:-translate-y-2  delay-200 ease-in-out
                   hover:shadow-[0_20px_40px_rgba(0,0,0,0.35)]
                   transition-all duration-300"
           >
-            <Link to="/Student_login">Student</Link>
+            <Link to="/Student-login">Student</Link>
           </div>
         </div>
       </div>

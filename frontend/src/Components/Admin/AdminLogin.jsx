@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { MdOutlineEmail } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAdmin } from '../../redux/slices/adminSlice';
+import { adminLogin} from '../../redux/slices/adminSlice';
 import { useNavigate } from "react-router-dom"
 
 export const AdminLogin = () => {
@@ -34,12 +34,14 @@ export const AdminLogin = () => {
     const handleSubmit=(e)=>{
         e.preventDefault()
         console.log("admin data :",adminData);
-        dispatch(fetchAdmin(adminData))    
+        dispatch(adminLogin(adminData)) 
+        
     }
 
     useEffect(()=>{
       if(adminInfo?.success == true){
-        navigate("/admin_dashboard")
+        navigate("/admin-dashboard")
+        
       }
     },[adminInfo])
 
