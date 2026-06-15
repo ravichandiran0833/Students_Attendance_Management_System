@@ -28,7 +28,9 @@ export const getDashboard = createAsyncThunk("admin/dashboard", async (_, thunkA
         withCredentials: true,
       },
     );
-    console.log("res:", response);
+     console.log("res:", response);
+    return response.data
+   
   } catch (error) {
     console.log("err:", error);
     return thunkAPI.rejectWithValue(error)
@@ -84,6 +86,18 @@ const adminSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      .addCase(getDashboard.pending, (state)=>{
+        state.loading = true;
+      })
+      .addCase(getDashboard.fulfilled, (state,action)=>{
+        state.loading = false,
+        state.adminInfo = action.payload
+      })
+      .addCase(getDashboard.rejected, (state,action)=>{
+        state.loading = false,
+        state.error = action.payload
+      })
+ 
       .addCase(addTeacher.pending, (state)=>{
         state.loading = true,
         state.error = null

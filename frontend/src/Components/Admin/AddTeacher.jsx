@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addTeacher, clearteacherInfo } from "../../redux/slices/adminSlice";
 import { useNavigate } from "react-router-dom";
+import Loading from "../Loading";
 export const AddTeacher = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -12,13 +13,14 @@ export const AddTeacher = () => {
   console.log("profile:", profile);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const {teacherInfo} = useSelector((state)=>state.admin)
-  
-  console.log("teacherInfo:",teacherInfo);
-  
+  const { teacherInfo, loading } = useSelector((state) => state.admin);
 
+  const adminSlice = useSelector((state) => state.admin);
+  console.log("adminSlice : ", adminSlice);
+
+  console.log("teacherInfo:", teacherInfo);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -37,13 +39,17 @@ export const AddTeacher = () => {
     dispatch(addTeacher(formData));
   };
 
-  useEffect(()=>{
-    if(teacherInfo ?.success == true){
-      navigate("/admin-dashboard")
-      dispatch(clearteacherInfo())
-    }
-  },[teacherInfo])
+  useEffect(() => {
 
+    if (teacherInfo?.success == true) {
+      navigate("/admin-dashboard");
+      dispatch(clearteacherInfo());
+    }
+  }, [teacherInfo,]);
+  
+      if(loading){
+      return <Loading/>
+    }
 
   return (
     <>

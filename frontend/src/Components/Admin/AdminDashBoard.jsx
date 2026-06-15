@@ -1,11 +1,15 @@
 import React, { useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { getDashboard } from "../../redux/slices/adminSlice";
 export const AdminDashBoard = () => {
   const location = useLocation();
 
   const dispatch = useDispatch()
+
+    const adminSlice = useSelector((state) => state.admin);
+  console.log("adminSlice : ", adminSlice);
+
   useEffect(()=>{
     dispatch(getDashboard())
   },[])
