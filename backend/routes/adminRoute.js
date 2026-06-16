@@ -1,5 +1,5 @@
 import express from "express"
-import {addTeacher, adminLogin, checkAdmin} from '../controllers/adminController.js'
+import {addDepartment, addTeacher, adminLogin, checkAdmin} from '../controllers/adminController.js'
 import adminAuthenticate from "../middleware/adminAuthentication.js"
 import adminAuthorize from "../middleware/adminAuthorization.js"
 import upload from "../middleware/upload.js"
@@ -15,5 +15,6 @@ router.use(adminAuthorize("admin"))
 
 router.get("/dashboard", checkAdmin)
 router.post("/addTeacher",uploadImage, addTeacher)
+router.post("/addDepartment", addDepartment)
 
 export default router

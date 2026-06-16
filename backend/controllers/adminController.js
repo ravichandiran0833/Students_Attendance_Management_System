@@ -159,3 +159,66 @@ export const addTeacher = async (req, res) => {
     }
   });
 };
+
+export const addDepartment = (req, res) => {
+  console.log("req body :", req.body);
+  const { departmentName, classes } = req.body;
+
+  if (!departmentName) {
+    return res.status(400).json({
+      success: false,
+      message: "Department Name is Required",
+    });
+  }
+
+  const checkDepartment =
+    "select id from departments where department_name = ?";
+  db.query(checkDepartment, [departmentName], (err, departmentResult) => {
+    if (err) {
+      console.log("err :", err);
+
+      return res.status(500).json({
+        success: false,
+        message: "Database error",
+      });
+    }
+    if (departmentResult.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Department Already Exist",
+      });
+    }
+
+    try {
+      const ug1 = classes.includes("UG-I");
+      const ug2 = classes.includes("UG-II");
+      const ug3 = classes.includes("UG-III");
+      const pg1 = classes.includes("PG-I");
+      const pg2 = classes.includes("PG-II");
+
+      const sql =
+        "insert into departments(department_name, ug1, ug2, ug3, pg1, pg2) values (?,?,?,?,?,?)";
+      db.query(sql, [departmentName, ug1, ug2, ug3, pg1, pg2], (err, result) => {
+        if (err) {
+          console.log("err:", err);
+
+          return res.status(500).json({
+            success: false,
+            message: "Database Error",
+          });
+        }
+        return res.status(201).json({
+          success: true,
+          message: "Department Added Succesfully",
+        });
+      });
+    } catch (error) {
+      console.log("err:", error);
+
+      return res.status(400).json({
+        success: false,
+        message: "Failed to Add Department",
+      });
+    }
+  });
+};

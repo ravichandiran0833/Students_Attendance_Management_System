@@ -5,7 +5,7 @@ const AdminProtectRoute = ({ children }) => {
 
 
   const { adminInfo } = useSelector((state) => state.admin);
-  console.log("adminInfo:", adminInfo);
+  // console.log("adminInfo:", adminInfo);
 
   if(!adminInfo){
     return <Navigate to="/admin-login"/>

@@ -33,7 +33,7 @@ export const AdminLogin = () => {
 
     const handleSubmit=(e)=>{
         e.preventDefault()
-        console.log("admin data :",adminData);
+        // console.log("admin data :",adminData);
         dispatch(adminLogin(adminData)) 
         
     }
@@ -41,7 +41,7 @@ export const AdminLogin = () => {
     useEffect(()=>{
       if(adminInfo?.success == true){
         toast.success(adminInfo.message,{
-          autoClose : 2000
+          autoClose : 1000
         })
         navigate("/admin-dashboard")
         
