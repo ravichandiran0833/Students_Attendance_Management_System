@@ -1,19 +1,45 @@
 import React, { useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux";
 import { getDashboard } from "../../redux/slices/adminSlice";
+import { toast } from "react-toastify";
+import Loading from "../Loading";
 export const AdminDashBoard = () => {
   const location = useLocation();
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-    const adminSlice = useSelector((state) => state.admin);
-  console.log("adminSlice : ", adminSlice);
+  const adminSlice = useSelector((state) => state.admin);
+  console.log("dashboard adminSlice : ", adminSlice);
 
-  useEffect(()=>{
-    dispatch(getDashboard())
-  },[])
+  const { adminInfo,adminWelcome, loading } = useSelector((state) => state.admin);
 
+  if (loading) {
+    <Loading />;
+  }
+
+  useEffect(() => {
+    dispatch(getDashboard());
+
+    // if (adminWelcome?.success ) {
+    //   setTimeout(()=>{
+    //         toast.success(adminWelcome.message, {
+    //     autoClose: 1000,
+    //   });
+    //   },2000)
+    // }
+  }, []);
+
+  useEffect(() => {
+    console.log("adminWelcome:",adminWelcome);
+  if (adminWelcome?.success) {
+    setTimeout(() => {
+      toast.success(adminWelcome.message,{
+        autoClose : 1000
+      });
+    }, 2000);
+  }
+}, [adminWelcome]);
 
   return (
     <>

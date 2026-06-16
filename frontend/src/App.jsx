@@ -11,10 +11,12 @@ import { AdminHome } from "./Components/Admin/AdminHome";
 import { AddDepartment } from "./Components/Admin/AddDepartment";
 import { ViewTeachers } from "./Components/Admin/ViewTeachers";
 import AdminProtectRoute from "./Components/Admin/AdminProtectRoute";
+import { ToastContainer } from "react-toastify"
 
 function App() {
   return (
     <div>
+      <ToastContainer/>
       <BrowserRouter>
         <Routes>
           <Route index element={<UserRole />}></Route>

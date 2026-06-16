@@ -4,7 +4,7 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { useDispatch, useSelector } from 'react-redux';
 import { adminLogin} from '../../redux/slices/adminSlice';
 import { useNavigate } from "react-router-dom"
-
+import { toast } from "react-toastify"
 export const AdminLogin = () => {
 
     const dispatch = useDispatch() 
@@ -40,6 +40,9 @@ export const AdminLogin = () => {
 
     useEffect(()=>{
       if(adminInfo?.success == true){
+        toast.success(adminInfo.message,{
+          autoClose : 2000
+        })
         navigate("/admin-dashboard")
         
       }

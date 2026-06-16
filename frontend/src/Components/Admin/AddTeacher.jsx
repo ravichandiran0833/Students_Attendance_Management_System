@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addTeacher, clearteacherInfo } from "../../redux/slices/adminSlice";
+import {
+  addTeacher,
+  clearError,
+  clearteacherInfo,
+} from "../../redux/slices/adminSlice";
 import { useNavigate } from "react-router-dom";
 import Loading from "../Loading";
+import { toast } from "react-toastify";
 export const AddTeacher = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -15,12 +20,13 @@ export const AddTeacher = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { teacherInfo, loading } = useSelector((state) => state.admin);
+  const { teacherInfo, loading, error } = useSelector((state) => state.admin);
 
   const adminSlice = useSelector((state) => state.admin);
   console.log("adminSlice : ", adminSlice);
 
   console.log("teacherInfo:", teacherInfo);
+  console.log("error:", error);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,27 +38,40 @@ export const AddTeacher = () => {
     formData.append("department", department);
     formData.append("profile", profile);
 
-    console.log([...formData.entries()]);
+    // console.log([...formData.entries()]);
 
-    console.log("profile:", profile);
+    // console.log("profile:", profile);
 
     dispatch(addTeacher(formData));
   };
 
   useEffect(() => {
-
     if (teacherInfo?.success == true) {
-      navigate("/admin-dashboard");
+      toast.success(teacherInfo.message,{
+        autoClose : 1000
+      }
+      );
+      setTimeout(() => {
+        navigate("/admin-dashboard");
+      }, 1000);
       dispatch(clearteacherInfo());
     }
-  }, [teacherInfo,]);
-  
-      if(loading){
-      return <Loading/>
+  }, [teacherInfo, navigate, dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error.message || error);
+      dispatch(clearError());
     }
+  }, [error,dispatch]);
+
+  // if (loading) {
+  //   return <Loading />;
+  // }
 
   return (
     <>
+     {loading && <Loading />}
       <div className="w-full min-h-screen flex flex-col items-center py-6 md:py-10 px-4 bg-gray-400">
         <h1 className="text-2xl md:text-3xl text-white font-bold mb-10">
           Add Teacher
@@ -68,6 +87,7 @@ export const AddTeacher = () => {
               <input
                 type="text"
                 name="name"
+                required
                 className="border flex-1 px-4 py-1 lg:py-2 rounded outline-none"
                 onChange={(e) => setName(e.target.value)}
               />
@@ -78,6 +98,7 @@ export const AddTeacher = () => {
               <input
                 type="email"
                 name="email"
+                required
                 className="border flex-1 px-4 py-1 lg:py-2 rounded outline-none"
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -88,6 +109,7 @@ export const AddTeacher = () => {
               <input
                 type="password"
                 name="password"
+                required
                 className="border flex-1 px-4 py-1 lg:py-2 rounded outline-none"
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -97,6 +119,7 @@ export const AddTeacher = () => {
               <label className="md:w-40">Department</label>
               <select
                 className="border flex-1 px-4 py-1 lg:py-2 rounded outline-none "
+                required
                 onChange={(e) => setDepartment(e.target.value)}
               >
                 <option value="">Select Department</option>
@@ -116,6 +139,7 @@ export const AddTeacher = () => {
                 type="file"
                 name="profile"
                 className="border flex-1 pl-5 py-1 lg:py-2 rounded"
+                required
                 onChange={(e) => setProfile(e.target.files[0])}
               />
             </div>
@@ -123,8 +147,9 @@ export const AddTeacher = () => {
             <button
               type="submit"
               className="bg-orange-500 hover:bg-blue-500 px-10 py-2 rounded-xl mx-auto cursor-pointer"
+              disabled ={loading}
             >
-              Submit
+              {loading? "Adding..." : "Add Teacher"}
             </button>
           </form>
         </div>

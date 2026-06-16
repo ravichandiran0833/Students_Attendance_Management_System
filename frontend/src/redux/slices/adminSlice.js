@@ -32,8 +32,8 @@ export const getDashboard = createAsyncThunk("admin/dashboard", async (_, thunkA
     return response.data
    
   } catch (error) {
-    console.log("err:", error);
-    return thunkAPI.rejectWithValue(error)
+    console.log(" err:", error.message);
+    return thunkAPI.rejectWithValue(error.message)
   }
 });
 
@@ -50,11 +50,13 @@ export const addTeacher = createAsyncThunk(
         }
        
       );
-      console.log("res:", response.data);
+      console.log("  res:", response.data);
       return response.data
     } catch (error) {
-      console.log("err:", error);
-      thunkAPI.rejectWithValue(error)
+      console.log(" Add teacher err 1:", error.message);
+      console.log(" Add teacher err 2:", error.response.message);
+      console.log(" Add teacher err 3:", error.response.data);
+      return thunkAPI.rejectWithValue(error.response.data)
     }
   },
 );
@@ -63,6 +65,7 @@ const adminSlice = createSlice({
   name: "adminSlice",
   initialState: {
     adminInfo: null,
+    adminWelcome : null,
     teacherInfo : null,
     loading: false,
     error: null,
@@ -70,6 +73,9 @@ const adminSlice = createSlice({
   reducers: {
     clearteacherInfo : (state)=>{
       state.teacherInfo = null;
+    },
+    clearError : (state)=>{
+      state.error = null
     }
   },
   extraReducers: (builder) => {
@@ -91,7 +97,7 @@ const adminSlice = createSlice({
       })
       .addCase(getDashboard.fulfilled, (state,action)=>{
         state.loading = false,
-        state.adminInfo = action.payload
+        state.adminWelcome = action.payload
       })
       .addCase(getDashboard.rejected, (state,action)=>{
         state.loading = false,
@@ -116,6 +122,6 @@ const adminSlice = createSlice({
   },
 });
 
-export const {clearteacherInfo} = adminSlice.actions;
+export const {clearteacherInfo, clearError} = adminSlice.actions;
 
 export default adminSlice.reducer;
