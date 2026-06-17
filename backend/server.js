@@ -17,7 +17,7 @@ console.log("FRONTEND_URL:", process.env.FRONTEND_URL);
 
 app.use(express.json())
 app.use(cors({
-    methods : ["GET","POST","DELETE"],
+    methods : ["GET","POST","DELETE","PUT"],
     credentials : true,
     origin  : process.env.FRONTEND_URL
 }))

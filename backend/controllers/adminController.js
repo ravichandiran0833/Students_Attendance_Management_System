@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import cloudinary from "../config/cloudinary.js";
+import fs from "fs";
 dotenv.config();
 
 export const adminLogin = (req, res) => {
@@ -198,20 +199,24 @@ export const addDepartment = (req, res) => {
 
       const sql =
         "insert into departments(department_name, ug1, ug2, ug3, pg1, pg2) values (?,?,?,?,?,?)";
-      db.query(sql, [departmentName, ug1, ug2, ug3, pg1, pg2], (err, result) => {
-        if (err) {
-          console.log("err:", err);
+      db.query(
+        sql,
+        [departmentName, ug1, ug2, ug3, pg1, pg2],
+        (err, result) => {
+          if (err) {
+            console.log("err:", err);
 
-          return res.status(500).json({
-            success: false,
-            message: "Database Error",
+            return res.status(500).json({
+              success: false,
+              message: "Database Error",
+            });
+          }
+          return res.status(201).json({
+            success: true,
+            message: "Department Added Succesfully",
           });
-        }
-        return res.status(201).json({
-          success: true,
-          message: "Department Added Succesfully",
-        });
-      });
+        },
+      );
     } catch (error) {
       console.log("err:", error);
 
@@ -221,4 +226,134 @@ export const addDepartment = (req, res) => {
       });
     }
   });
+};
+
+export const viewTeachers = (req, res) => {
+  const sql = "select * from teachers";
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log("err:", err);
+
+      return res.status(500).json({
+        success: false,
+        message: "Database Error",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      teachersData: result,
+    });
+  });
+};
+
+export const singleteacher = (req, res) => {
+  // console.log("id:", req.params.id);
+  const { id } = req.params;
+  const sql = "select * from teachers where id = ?";
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.log("err:", err);
+
+      return res.status(400).json({
+        success: false,
+        message: "Database Error",
+      });
+    }
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Teacher Not Found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      singleTeacherData: result[0],
+    });
+  });
+};
+
+const getPublicIdFromUrl = (url) => {
+  const parts = url.split("/upload/")[1];
+
+  return parts.replace(/^v\d+\//, "").replace(/\.[^/.]+$/, "");
+};
+
+export const editTeacher = async (req, res) => {
+  // console.log("req.body :", req.body);
+  // console.log("req.file :", req.file);
+
+  try {
+    const { id } = req.params;
+    const { name, email, department, oldProfile } = req.body;
+    let profile = oldProfile;
+    let uploadImagePublic_id = null;
+    if (req.file) {
+      const uploadImage = await cloudinary.uploader.upload(req.file.path, {
+        folder: "teacher",
+      });
+      profile = uploadImage.secure_url;
+      uploadImagePublic_id = uploadImage.public_id;
+      fs.unlinkSync(req.file.path);
+    }
+    const sql = `update teachers
+    set name = ?, email = ?, department = ?, profile = ?
+    where id = ?
+    `;
+    db.query(
+      sql,
+      [name, email, department, profile, id],
+      async (err, result) => {
+        if (err) {
+          console.log("err:", err);
+          if (uploadImagePublic_id) {
+            await cloudinary.uploader.destroy(uploadImagePublic_id);
+          }
+
+          return res.status(500).json({
+            success: false,
+            message: "Database Error",
+          });
+        }
+
+        if (result.affectedRows === 0) {
+          return res.status(404).json({
+            success: false,
+            message: "Teacher Not Found",
+          });
+        }
+
+        if (req.file && oldProfile) {
+          try {
+            const oldPublicId = getPublicIdFromUrl(oldProfile);
+
+            await cloudinary.uploader.destroy(oldPublicId);
+
+            console.log("Old image deleted:", oldPublicId);
+          } catch (deleteError) {
+            console.log("Failed to delete old image:", deleteError);
+          }
+        }
+
+        return res.status(200).json({
+          success: true,
+          message: "Teacher Updated Successfully",
+        });
+
+        return res.status(200).json({
+          success: true,
+          message: "Teacher Updated Successfully",
+        });
+      },
+    );
+  } catch (error) {
+    console.log("Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to Update Teacher",
+    });
+  }
 };

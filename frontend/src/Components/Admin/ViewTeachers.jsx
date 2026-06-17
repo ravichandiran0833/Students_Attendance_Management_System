@@ -1,8 +1,25 @@
-import React from "react";
-import profilePic from "../../assets/log1.jpg"
+import { useSelector } from "react-redux";
+import profilePic from "../../assets/log1.jpg";
+import { useNavigate } from "react-router-dom"
+import Loading from "../Loading";
 export const ViewTeachers = () => {
+
+  const navigate = useNavigate()
+  const { AllTeachersData, loading } = useSelector((state) => state.admin);
+
+  const adminSlice = useSelector((state) => state.admin);
+  console.log("viewTeachers adminSlice : ", adminSlice);
+
+  const teachersData = AllTeachersData?.teachersData || [];
+
+  const editTeacher =(id)=>{
+    navigate(`../edit-teacher/${id}`)
+    
+  }
+
   return (
-    <> 
+    <>
+      {loading && <Loading />}
       <div className="w-full flex flex-col items-center py-15 gap-10">
         <div>
           <h1 className="text-xl font-bold md:text-2xl">Teachers List</h1>
@@ -25,7 +42,53 @@ export const ViewTeachers = () => {
             </thead>
 
             <tbody>
-              <tr className="hover:bg-gray-100 transition">
+              {teachersData.map((teacher) => (
+                <tr className="hover:bg-gray-100 transition" key={teacher.id}>
+                  <td className="border border-gray-300 px-4 py-1">
+                    <img
+                      src={teacher.profile}
+                      className="w-12 h-12 rounded-full object-cover md:w-15 md:h-15"
+                    ></img>
+                  </td>
+                  <td className="border border-gray-300 px-4 py-3 text-center text-md md:text-xl">
+                    {teacher.name}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-3 text-center ">
+                    <div className="text-xs flex gap-2 md:gap-4 justify-center items-center md:text-lg">
+                      <button 
+                      className="bg-green-500 text-white px-2 py-1 rounded border-none outline-none cursor-pointer"
+                      onClick={()=>editTeacher(teacher.id)}
+                      >
+                        Edit
+                      </button>
+                      <button className="bg-red-500 text-white px-2 py-1 rounded border-none outline-none cursor-pointer">
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              <tr className="bg-blue-500 text-white font-bold hover:bg-gray-500 transition ">
+                <td
+                  colSpan={2}
+                  className="border border-gray-300 px-4 py-3 text-center text-xs md:text-xl"
+                >
+                  Total Teachers
+                </td>
+                <td className="border border-gray-300 px-4 py-3 text-center text-xs md:text-xl">
+                  {teachersData.length}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
+  );
+};
+
+{
+  /* <tr className="hover:bg-gray-100 transition">
                 <td className="border border-gray-300 px-4 py-1">
                     <img src={profilePic} className="w-12 h-12 rounded-full object-cover md:w-15 md:h-15"></img>
                     </td>
@@ -40,7 +103,6 @@ export const ViewTeachers = () => {
                 </td>
               </tr>
 
-
               <tr className="bg-blue-500 text-white font-bold hover:bg-gray-500 transition ">
                 <td
                   colSpan={2}
@@ -51,12 +113,5 @@ export const ViewTeachers = () => {
                 <td className="border border-gray-300 px-4 py-3 text-center text-xs md:text-xl">
                   10
                 </td>
-              </tr>
-
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </>
-  );
-};
+              </tr> */
+}

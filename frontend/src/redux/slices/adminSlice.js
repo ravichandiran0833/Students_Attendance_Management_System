@@ -85,12 +85,42 @@ export const addDepartment = createAsyncThunk(
 
 export const viewTeachers = createAsyncThunk("admin/viewTeachers", async(_, thunkAPI)=>{
   try {
-    const response = await axios.get("http://localhost:3000/api/auth/admin/viewTeachers")
+    const response = await axios.get("http://localhost:3000/api/auth/admin/viewTeachers",
+      {
+        withCredentials : true
+      }
+    )
     return response.data
   } catch (error) {
-    console.log("view teachers error :",error);
+    console.log("view teachers error :",error.response);
     
     return thunkAPI.rejectWithValue(error.response.data)
+  }
+})
+
+export const getSingleTeacher = createAsyncThunk("admin/singleTeacher" ,async(id, thunkAPI)=>{
+  try {
+    const response = await axios.get(`http://localhost:3000/api/auth/admin/singleTeacher/${id}`,{
+      withCredentials : true
+    })
+    return response.data 
+  } catch (error) {
+    console.log("err:",error.response);
+    
+    return thunkAPI.rejectWithValue(error.response.data)
+  }
+})
+
+export const editTeacher = createAsyncThunk("admin/editTeacher", async({id, formData:teacherData}, thunkAPI)=>{
+  try {
+    const response = await axios.put(`http://localhost:3000/api/auth/admin/editTeacher/${id}`,teacherData, {
+      withCredentials : true
+    })
+    return response.data
+  } catch (error) {
+    console.log("err :",error);
+    return thunkAPI.rejectWithValue(error.response.data)
+    
   }
 })
 
@@ -101,7 +131,10 @@ const adminSlice = createSlice({
     adminWelcome: null,
     teacherInfo: null,
     departmentInfo: null,
+    AllTeachersData : null,
     loading: false,
+    singleTeacher : null,
+    editTeacherInfo : null,
     error: null,
   },
   reducers: {
@@ -116,7 +149,14 @@ const adminSlice = createSlice({
     },
     clearAdminWelcome : (state)=>{
       state.adminWelcome = null
+    },
+    clearAllTeachersData : (state)=>{
+      state.AllTeachersData = null
+    },
+    clearEditTeacherInfo :(state)=>{
+      state.editTeacherInfo = null
     }
+    
   },
   extraReducers: (builder) => {
     builder
@@ -136,7 +176,9 @@ const adminSlice = createSlice({
         state.loading = true;
       })
       .addCase(getDashboard.fulfilled, (state, action) => {
-        ((state.loading = false), (state.adminWelcome = action.payload));
+        state.loading = false,
+        state.adminWelcome = action.payload
+       
       })
       .addCase(getDashboard.rejected, (state, action) => {
         ((state.loading = false), (state.error = action.payload));
@@ -164,10 +206,52 @@ const adminSlice = createSlice({
       .addCase(addDepartment.rejected, (state, action) => {
         ((state.loading = false), (state.error = action.payload));
       })
+      .addCase(viewTeachers.pending, (state)=>{
+        state.loading = true
+      })
+      .addCase(viewTeachers.fulfilled, (state, action)=>{
+        state.loading = false,
+        state.AllTeachersData = action.payload
+      })
+      .addCase(viewTeachers.rejected, (state, action)=>{
+        state.loading = false,
+        state.error = action.payload
+      })
+      .addCase(getSingleTeacher.pending, (state)=>{
+        state.loading = true
+      })
+      .addCase(getSingleTeacher.fulfilled, (state,action)=>{
+        state.loading = false,
+        state.singleTeacher = action.payload
+      })
+      .addCase(getSingleTeacher.rejected, (state, action)=>{
+        state.loading = false,
+        state.error = action.payload
+      })
+      .addCase(editTeacher.pending, (state)=>{
+        state.loading = true
+      })
+      .addCase(editTeacher.fulfilled, (state,action)=>{
+        console.log("editTeacher payload :",action.payload);
+        
+        state.loading = false,
+        state.editTeacherInfo = action.payload
+      })
+      .addCase(editTeacher.rejected, (state, action)=>{
+        state.loading = false,
+        state.error = action.payload
+      })
       
   },
 });
 
-export const { clearteacherInfo, clearError, clearDepartmentInfo,clearAdminWelcome } = adminSlice.actions;
+export const { 
+  clearteacherInfo,
+   clearError, 
+   clearDepartmentInfo,
+   clearAdminWelcome,
+   clearAllTeachersData,
+   clearEditTeacherInfo
+} = adminSlice.actions;
 
 export default adminSlice.reducer;

@@ -11,12 +11,13 @@ import { AdminHome } from "./Components/Admin/AdminHome";
 import { AddDepartment } from "./Components/Admin/AddDepartment";
 import { ViewTeachers } from "./Components/Admin/ViewTeachers";
 import AdminProtectRoute from "./Components/Admin/AdminProtectRoute";
-import { ToastContainer } from "react-toastify"
+import { ToastContainer } from "react-toastify";
+import EditTeacher from "./Components/Admin/EditTeacher";
 
 function App() {
   return (
     <div>
-      <ToastContainer/>
+      <ToastContainer />
       <BrowserRouter>
         <Routes>
           <Route index element={<UserRole />}></Route>
@@ -37,6 +38,7 @@ function App() {
             <Route path="add-teacher" element={<AddTeacher />} />
             <Route path="add-department" element={<AddDepartment />} />
             <Route path="view-teachers" element={<ViewTeachers />} />
+            <Route path="edit-teacher/:id" element={<EditTeacher />} />
           </Route>
         </Routes>
       </BrowserRouter>

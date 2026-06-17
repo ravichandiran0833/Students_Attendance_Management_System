@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { clearAdminWelcome, getDashboard } from "../../redux/slices/adminSlice";
+import { clearAdminWelcome,  getDashboard, } from "../../redux/slices/adminSlice";
 import { toast } from "react-toastify";
 import Loading from "../Loading";
 export const AdminDashBoard = () => {
@@ -12,16 +12,15 @@ export const AdminDashBoard = () => {
   const adminSlice = useSelector((state) => state.admin);
   console.log("dashboard adminSlice : ", adminSlice);
 
-  const { adminInfo, adminWelcome, loading } = useSelector(
+  const { adminWelcome, loading, } = useSelector(
     (state) => state.admin,
   );
+  
 
-  if (loading) {
-    <Loading />;
-  }
 
   useEffect(() => {
     dispatch(getDashboard());
+
   }, [dispatch]);
 
   useEffect(() => {
@@ -34,11 +33,13 @@ export const AdminDashBoard = () => {
       }, 2000);
       dispatch(clearAdminWelcome())
     }
+
     
-  }, [adminWelcome]);
+  }, [adminWelcome,dispatch]);
 
   return (
     <>
+      {loading && <Loading/>}
       <div className="w-screen h-screen flex ">
         <div
           className={`admin-dashboard-div1 bg-gray-500  lg:w-64 
