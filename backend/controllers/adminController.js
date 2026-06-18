@@ -309,7 +309,13 @@ export const editTeacher = async (req, res) => {
         if (err) {
           console.log("err:", err);
           if (uploadImagePublic_id) {
-            await cloudinary.uploader.destroy(uploadImagePublic_id);
+            // await cloudinary.uploader.destroy(uploadImagePublic_id);
+            try {
+              await cloudinary.uploader.destroy(uploadImagePublic_id);
+              console.log("Successfully image delete from cloud");
+            } catch (error) {
+              console.log("Cloudinary Delete Error:", error);
+            }
           }
 
           return res.status(500).json({
@@ -356,4 +362,64 @@ export const editTeacher = async (req, res) => {
       message: "Failed to Update Teacher",
     });
   }
+};
+
+export const deleteTeacher = (req, res) => {
+  const { id } = req.params;
+  console.log("delete id:", id);
+
+  const getProfile_url = "select profile from teachers where id = ?";
+  db.query(getProfile_url, [id], (err, urlResult) => {
+    if (err) {
+      console.log("err:", err);
+
+      return res.status(500).json({
+        success: false,
+        message: "Database Error",
+      });
+    }
+
+    if (urlResult.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Teacher Not Found",
+      });
+    }
+
+    console.log("url result :", urlResult);
+    const profile_url = urlResult[0].profile;
+    const Profile_public_id = getPublicIdFromUrl(profile_url);
+    console.log("Profile_public_id:", Profile_public_id);
+
+    const sql = "delete from teachers where id = ?";
+    db.query(sql, [id], async (err, result) => {
+      if (err) {
+        console.log("err;", err);
+
+        return res.status(500).json({
+          success: false,
+          message: "Database Error",
+        });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "User Not Found",
+        });
+      }
+
+      try {
+        await cloudinary.uploader.destroy(Profile_public_id);
+        console.log("Successfully image delete from cloud");
+      } catch (error) {
+        console.log("Cloudinary Delete Error:", error);
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Deleted Successfully",
+      });
+    });
+  });
 };

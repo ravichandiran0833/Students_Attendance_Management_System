@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { MdOutlineEmail } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { useDispatch, useSelector } from 'react-redux';
-import { adminLogin} from '../../redux/slices/adminSlice';
+import { adminLogin, clearError} from '../../redux/slices/adminSlice';
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 export const AdminLogin = () => {
@@ -35,6 +35,10 @@ export const AdminLogin = () => {
         e.preventDefault()
         // console.log("admin data :",adminData);
         dispatch(adminLogin(adminData)) 
+        setAdminData({
+          email : "",
+          password : ""
+        })
         
     }
 
@@ -44,9 +48,9 @@ export const AdminLogin = () => {
           autoClose : 1000
         })
         navigate("/admin-dashboard")
-        
+        dispatch(clearError())     
       }
-    },[adminInfo])
+    },[adminInfo,dispatch,navigate])
 
   return (
     <div className='admin-login-container h-screen w-screen lg:flex flex-col items-center md:pt-20 pt-10'>

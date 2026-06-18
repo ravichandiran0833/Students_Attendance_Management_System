@@ -1,11 +1,15 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import profilePic from "../../assets/log1.jpg";
 import { useNavigate } from "react-router-dom"
 import Loading from "../Loading";
+import { useEffect } from "react";
+import { toast } from "react-toastify"
+import { clearDeleteTeacherInfo, clearError, deleteTeacher, viewTeachers } from "../../redux/slices/adminSlice";
 export const ViewTeachers = () => {
 
+  const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { AllTeachersData, loading } = useSelector((state) => state.admin);
+  const { AllTeachersData, loading, deleteTeacherInfo, error } = useSelector((state) => state.admin);
 
   const adminSlice = useSelector((state) => state.admin);
   console.log("viewTeachers adminSlice : ", adminSlice);
@@ -16,6 +20,26 @@ export const ViewTeachers = () => {
     navigate(`../edit-teacher/${id}`)
     
   }
+
+  const handleDeleteTeacher =(id)=>{
+    dispatch(deleteTeacher(id))
+  }
+  
+  useEffect(()=>{
+    if(deleteTeacherInfo?.success){
+      toast.success(deleteTeacherInfo.message)
+      dispatch(viewTeachers())
+      dispatch(clearDeleteTeacherInfo())
+    }
+    if(error){
+      toast.error(error.message || error)
+      dispatch(clearError())
+    }
+  },[deleteTeacherInfo, error,dispatch])
+
+  useEffect(()=>{
+    dispatch(viewTeachers())
+  },[dispatch])
 
   return (
     <>
@@ -61,7 +85,10 @@ export const ViewTeachers = () => {
                       >
                         Edit
                       </button>
-                      <button className="bg-red-500 text-white px-2 py-1 rounded border-none outline-none cursor-pointer">
+                      <button 
+                      className="bg-red-500 text-white px-2 py-1 rounded border-none outline-none cursor-pointer"
+                      onClick={()=>handleDeleteTeacher(teacher.id)}
+                      >
                         Delete
                       </button>
                     </div>
@@ -87,31 +114,3 @@ export const ViewTeachers = () => {
   );
 };
 
-{
-  /* <tr className="hover:bg-gray-100 transition">
-                <td className="border border-gray-300 px-4 py-1">
-                    <img src={profilePic} className="w-12 h-12 rounded-full object-cover md:w-15 md:h-15"></img>
-                    </td>
-                <td className="border border-gray-300 px-4 py-3 text-center text-md md:text-xl">
-                  Jack
-                </td>
-                <td className="border border-gray-300 px-4 py-3 text-center ">
-                    <div className="text-xs flex gap-2 md:gap-4 justify-center items-center md:text-lg">
-                         <button className="bg-green-500 text-white px-2 py-1 rounded border-none outline-none">Edit</button>
-                          <button className="bg-red-500 text-white px-2 py-1 rounded border-none outline-none">Delete</button>
-                    </div>
-                </td>
-              </tr>
-
-              <tr className="bg-blue-500 text-white font-bold hover:bg-gray-500 transition ">
-                <td
-                  colSpan={2}
-                  className="border border-gray-300 px-4 py-3 text-center text-xs md:text-xl"
-                >
-                  Total Teachers
-                </td>
-                <td className="border border-gray-300 px-4 py-3 text-center text-xs md:text-xl">
-                  10
-                </td>
-              </tr> */
-}

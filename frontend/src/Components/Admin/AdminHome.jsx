@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {} from "react-redux"
-import { viewTeachers } from "../../redux/slices/adminSlice";
+import { clearSingleTeacher, viewTeachers } from "../../redux/slices/adminSlice";
 import Loading from "../Loading";
 export const AdminHome = () => {
 
@@ -10,7 +10,7 @@ export const AdminHome = () => {
   const adminSlice = useSelector((state)=>state.admin)
   console.log("Admin Home adminSlice :",adminSlice);
   
-  const {AllTeachersData, loading} = useSelector((state)=>state.admin)
+  const {AllTeachersData, loading, singleTeacher} = useSelector((state)=>state.admin)
 
   const teachersData = AllTeachersData?.teachersData || []
   console.log("Admin home teachersData :",teachersData);
@@ -18,6 +18,12 @@ export const AdminHome = () => {
   useEffect(()=>{
      dispatch(viewTeachers())
   },[dispatch])
+
+  useEffect(()=>{
+    if(singleTeacher?.success){
+      dispatch(clearSingleTeacher())
+    }
+  },[singleTeacher,dispatch])
   return (
     <>
     {loading && <Loading/>}

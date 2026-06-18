@@ -31,6 +31,16 @@ export const AddTeacher = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email");
+      return;
+    }
+    if(password.length < 8){
+      toast.error("Password Length Must be 8 Digit")
+      return;
+    }
     const formData = new FormData();
     formData.append("name", name);
     formData.append("email", email);
@@ -47,10 +57,9 @@ export const AddTeacher = () => {
 
   useEffect(() => {
     if (teacherInfo?.success == true) {
-      toast.success(teacherInfo.message,{
-        autoClose : 1000
-      }
-      );
+      toast.success(teacherInfo.message, {
+        autoClose: 1000,
+      });
       setTimeout(() => {
         navigate("/admin-dashboard");
       }, 1000);
@@ -63,15 +72,11 @@ export const AddTeacher = () => {
       toast.error(error.message || error);
       dispatch(clearError());
     }
-  }, [error,dispatch]);
-
-  // if (loading) {
-  //   return <Loading />;
-  // }
+  }, [error, dispatch]);
 
   return (
     <>
-     {loading && <Loading />}
+      {loading && <Loading />}
       <div className="w-full min-h-screen flex flex-col items-center py-6 md:py-10 px-4 bg-gray-400">
         <h1 className="text-2xl md:text-3xl text-white font-bold mb-10">
           Add Teacher
@@ -147,9 +152,9 @@ export const AddTeacher = () => {
             <button
               type="submit"
               className="bg-orange-500 hover:bg-blue-500 px-10 py-2 rounded-xl mx-auto cursor-pointer"
-              disabled ={loading}
+              disabled={loading}
             >
-              {loading? "Adding..." : "Add Teacher"}
+              {loading ? "Adding..." : "Add Teacher"}
             </button>
           </form>
         </div>

@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { clearEditTeacherInfo, editTeacher, getSingleTeacher } from "../../redux/slices/adminSlice";
+import { clearEditTeacherInfo, clearSingleTeacher, editTeacher, getSingleTeacher } from "../../redux/slices/adminSlice";
 import Loading from "../Loading";
 import { useState } from "react";
 import { toast } from "react-toastify";
 const EditTeacher = () => {
-  const { singleTeacher, loading, editTeacherInfo } = useSelector(
+  const { singleTeacher, loading, editTeacherInfo,error } = useSelector(
     (state) => state.admin,
   );
 
@@ -37,7 +37,10 @@ const EditTeacher = () => {
       setDepartment(teacherData.department);
       setOldProfile(teacherData.profile);
     }
-  }, [teacherData]);
+    if(error){
+      toast.error(error.message || error)
+    }
+  }, [teacherData,error]);
 
   useEffect(() => {
     dispatch(getSingleTeacher(id));
@@ -47,10 +50,11 @@ const EditTeacher = () => {
     if (editTeacherInfo?.success) {
       toast.success(editTeacherInfo.message);
       setTimeout(() => {
-        navigate("/admin-dashboard");
+        navigate("/admin-dashboard/view-teachers");
       }, 1000);
     }
     dispatch(clearEditTeacherInfo())
+    dispatch(clearSingleTeacher())
   }, [dispatch,navigate,editTeacherInfo]);
 
   const handleSubmit = (e) => {
@@ -106,17 +110,6 @@ const EditTeacher = () => {
               />
             </div>
 
-            {/* <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-              <label className="md:w-40">Password</label>
-              <input
-                type="password"
-                name="password"
-                required
-                className="border flex-1 px-4 py-1 lg:py-2 rounded outline-none"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div> */}
-
             <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
               <label className="md:w-40">Department</label>
               <select
@@ -151,7 +144,7 @@ const EditTeacher = () => {
               className="bg-orange-500 hover:bg-blue-500 px-10 py-2 rounded-xl mx-auto cursor-pointer"
               disabled={loading}
             >
-              {loading ? "Adding..." : "Add Teacher"}
+              {loading ? "Update..." : "Update Teacher"}
             </button>
           </form>
         </div>
