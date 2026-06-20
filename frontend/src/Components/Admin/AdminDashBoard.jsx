@@ -46,7 +46,9 @@ export const AdminDashBoard = () => {
             ${
               location.pathname === "/admin-dashboard/add-teacher" ||
               location.pathname === "/admin-dashboard/add-department" ||
-              location.pathname === "/admin-dashboard/view-teachers"
+              location.pathname === "/admin-dashboard/view-teachers" ||
+              location.pathname === "/admin-dashboard/view-departments" ||
+              location.pathname.startsWith("/admin-dashboard/edit-teacher")
                 ? "hidden md:block"
                 : "block"
             }
@@ -73,7 +75,7 @@ export const AdminDashBoard = () => {
             </li>
             <hr className="border w-full border-gray-600" />
             <li className="w-full text-center py-1  hover:bg-gray-400">
-              <Link>View Department</Link>
+              <Link to="view-departments">View Department</Link>
             </li>
             <hr className="border w-full border-gray-600" />
           </ul>

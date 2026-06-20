@@ -159,6 +159,50 @@ export const deleteTeacher = createAsyncThunk(
   },
 );
 
+export const getAllDepartments = createAsyncThunk("admin/getAllDepartments", async(_, thunkAPI)=>{
+  try {
+    const response = await axios.get("http://localhost:3000/api/auth/admin/getAllDepartments",
+      {
+        withCredentials : true
+      }
+    )
+    return response.data 
+  } catch (error) {
+    console.log("error:",error);
+    return thunkAPI.rejectWithValue(error.response.data || error) 
+  }
+})
+
+export const singleDepartment = createAsyncThunk("admin/singleDepartment",async(id, thunkAPI)=>{
+  try {
+    const response = await axios.get(`http://localhost:3000/api/auth/admin/singleDepartment/${id}`,
+      {
+        withCredentials : true
+      }
+    )
+    return response.data
+  } catch (error) {
+    console.log("error:",error);
+    return thunkAPI.rejectWithValue(error.response.data || error)   
+  }
+})
+
+export const editDepartment = createAsyncThunk("admin/editDepartment",async({id, department},thunkAPI)=>{
+  try {
+    const response = await axios.put(`http://localhost:3000/api/auth/admin/editDepartment/${id}`,
+      department,
+      {
+        withCredentials : true
+      }
+    )
+    return response.data
+  } catch (error) {
+    console.log("error:",error.response);
+    return thunkAPI.rejectWithValue(error.response.data || error)
+    
+  }
+})
+
 const adminSlice = createSlice({
   name: "adminSlice",
   initialState: {
@@ -171,6 +215,9 @@ const adminSlice = createSlice({
     singleTeacher: null,
     editTeacherInfo: null,
     deleteTeacherInfo : null,
+    getAllDepartmentsInfo : null,
+    singleDepartmentInfo : null,
+    editDepartmentInfo : null,
     error: null,
   },
   reducers: {
@@ -197,6 +244,15 @@ const adminSlice = createSlice({
     },
     clearDeleteTeacherInfo : (state)=>{
       state.deleteTeacherInfo = null
+    },
+    clearAllDepartmentsInfo : (state)=>{
+      state.getAllDepartmentsInfo = null
+    },
+    clearEditDepartmentInfo : (state)=>{
+      state.editDepartmentInfo = null
+    },
+    clearSingleDepartmentInfo : (state)=>{
+      state.singleDepartmentInfo = null
     }
   },
   extraReducers: (builder) => {
@@ -285,6 +341,39 @@ const adminSlice = createSlice({
         state.loading = false
         state.error = action.payload
       })
+      .addCase(getAllDepartments.pending, (state)=>{
+        state.loading = true
+      })
+      .addCase(getAllDepartments.fulfilled, (state, action)=>{
+        state.loading = false,
+        state.getAllDepartmentsInfo = action.payload
+      })
+      .addCase(getAllDepartments.rejected, (state, action)=>{
+        state.loading = false,
+        state.error = action.payload
+      })
+      .addCase(singleDepartment.pending, (state)=>{
+        state.loading = true
+      })
+      .addCase(singleDepartment.fulfilled, (state, action)=>{
+        state.loading = false
+        state.singleDepartmentInfo = action.payload
+      })
+      .addCase(singleDepartment.rejected, (state, action)=>{
+        state.loading = false,
+        state.error = action.payload
+      })
+      .addCase(editDepartment.pending, (state)=>{
+        state.loading = true
+      })
+      .addCase(editDepartment.fulfilled, (state, action)=>{
+        state.loading = false,
+        state.editDepartmentInfo = action.payload
+      })
+      .addCase(editDepartment.rejected, (state, action)=>{
+        state.loading = false,
+        state.error = action.payload
+      })
   },
 });
 
@@ -296,7 +385,10 @@ export const {
   clearAllTeachersData,
   clearEditTeacherInfo,
   clearSingleTeacher,
-  clearDeleteTeacherInfo
+  clearDeleteTeacherInfo,
+  clearAllDepartmentsInfo,
+  clearEditDepartmentInfo,
+  clearSingleDepartmentInfo
 } = adminSlice.actions;
 
 export default adminSlice.reducer;

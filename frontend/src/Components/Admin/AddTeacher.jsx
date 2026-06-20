@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addTeacher,
+  clearAllDepartmentsInfo,
   clearError,
   clearteacherInfo,
+  getAllDepartments,
 } from "../../redux/slices/adminSlice";
 import { useNavigate } from "react-router-dom";
 import Loading from "../Loading";
@@ -20,13 +22,20 @@ export const AddTeacher = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { teacherInfo, loading, error } = useSelector((state) => state.admin);
+  const { teacherInfo, loading, error, getAllDepartmentsInfo } = useSelector(
+    (state) => state.admin,
+  );
 
   const adminSlice = useSelector((state) => state.admin);
   console.log("adminSlice : ", adminSlice);
 
-  console.log("teacherInfo:", teacherInfo);
+  // console.log("teacherInfo:", teacherInfo);
   console.log("error:", error);
+
+  //  console.log("getAllDepartmentsInfo:", getAllDepartmentsInfo);
+
+  const departmentsData = getAllDepartmentsInfo?.departmentsData || [];
+  console.log("departmentsData:", departmentsData);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -37,8 +46,8 @@ export const AddTeacher = () => {
       toast.error("Please enter a valid email");
       return;
     }
-    if(password.length < 8){
-      toast.error("Password Length Must be 8 Digit")
+    if (password.length < 8) {
+      toast.error("Password Length Must be 8 Digit");
       return;
     }
     const formData = new FormData();
@@ -73,6 +82,14 @@ export const AddTeacher = () => {
       dispatch(clearError());
     }
   }, [error, dispatch]);
+
+  useEffect(() => {
+    dispatch(getAllDepartments());
+
+    return () => {
+      dispatch(clearAllDepartmentsInfo());
+    };
+  }, [dispatch]);
 
   return (
     <>
@@ -129,12 +146,23 @@ export const AddTeacher = () => {
               >
                 <option value="">Select Department</option>
 
-                <option className="bg-white text-black" value="tamil">
+                {departmentsData.map((department, index) => (
+                  <option
+                    className="bg-white text-black"
+                    key={index}
+                    value={department.department_name}
+                  >
+                    {department.department_name.charAt(0).toUpperCase() +
+                      department.department_name.slice(1)}
+                  </option>
+                ))}
+
+                {/* <option className="bg-white text-black" value="tamil">
                   Tamil
                 </option>
                 <option className="bg-white text-black" value="english">
                   English
-                </option>
+                </option> */}
               </select>
             </div>
 

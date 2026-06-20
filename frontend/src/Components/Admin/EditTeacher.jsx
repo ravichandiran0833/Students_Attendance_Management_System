@@ -1,20 +1,33 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { clearEditTeacherInfo, clearSingleTeacher, editTeacher, getSingleTeacher } from "../../redux/slices/adminSlice";
+import {
+  clearAllDepartmentsInfo,
+  clearEditTeacherInfo,
+  clearSingleTeacher,
+  editTeacher,
+  getAllDepartments,
+  getSingleTeacher,
+} from "../../redux/slices/adminSlice";
 import Loading from "../Loading";
 import { useState } from "react";
 import { toast } from "react-toastify";
 const EditTeacher = () => {
-  const { singleTeacher, loading, editTeacherInfo,error } = useSelector(
-    (state) => state.admin,
-  );
+  const {
+    singleTeacher,
+    loading,
+    editTeacherInfo,
+    error,
+    getAllDepartmentsInfo,
+  } = useSelector((state) => state.admin);
 
-  const adminSlice = useSelector((state)=>state.admin)
-  console.log("editTeacherInfo adminSlice :",adminSlice);
-  
-  console.log("editTeacherInfo:",editTeacherInfo);
-  
+  const adminSlice = useSelector((state) => state.admin);
+  console.log("editTeacherInfo adminSlice :", adminSlice);
+
+  const departmentsData = getAllDepartmentsInfo?.departmentsData || [];
+  console.log("departmentsData:", departmentsData);
+
+  // console.log("editTeacherInfo:",editTeacherInfo);
 
   const teacherData = singleTeacher?.singleTeacherData || {};
   console.log("teacherData :", teacherData);
@@ -37,14 +50,21 @@ const EditTeacher = () => {
       setDepartment(teacherData.department);
       setOldProfile(teacherData.profile);
     }
-    if(error){
-      toast.error(error.message || error)
+    if (error) {
+      toast.error(error.message || error);
     }
-  }, [teacherData,error]);
+  }, [teacherData, error]);
 
   useEffect(() => {
     dispatch(getSingleTeacher(id));
+    dispatch(getAllDepartments());
+
+    return () => {
+      dispatch(clearAllDepartmentsInfo());
+    };
   }, [dispatch, id]);
+
+
 
   useEffect(() => {
     if (editTeacherInfo?.success) {
@@ -53,9 +73,9 @@ const EditTeacher = () => {
         navigate("/admin-dashboard/view-teachers");
       }, 1000);
     }
-    dispatch(clearEditTeacherInfo())
-    dispatch(clearSingleTeacher())
-  }, [dispatch,navigate,editTeacherInfo]);
+    dispatch(clearEditTeacherInfo());
+    dispatch(clearSingleTeacher());
+  }, [dispatch, navigate, editTeacherInfo]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -65,6 +85,7 @@ const EditTeacher = () => {
     formData.append("department", department);
     if (profile) {
       formData.append("profile", profile);
+      formData.append("oldProfile", oldProfile);
     } else {
       formData.append("oldProfile", oldProfile);
     }
@@ -120,12 +141,16 @@ const EditTeacher = () => {
               >
                 <option value="">Select Department</option>
 
-                <option className="bg-white text-black" value="tamil">
-                  Tamil
-                </option>
-                <option className="bg-white text-black" value="english">
-                  English
-                </option>
+                {departmentsData.map((department, index) => (
+                  <option
+                    className="bg-white text-black"
+                    key={index}
+                    value={department.department_name}
+                  >
+                    {department.department_name.charAt(0).toUpperCase() +
+                      department.department_name.slice(1)}
+                  </option>
+                ))}
               </select>
             </div>
 

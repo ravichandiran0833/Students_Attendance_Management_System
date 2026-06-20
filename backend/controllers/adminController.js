@@ -121,6 +121,11 @@ export const addTeacher = async (req, res) => {
         folder: "teacher",
       });
 
+      if (uploadResult.secure_url) {
+        fs.unlinkSync(req.file.path);
+        console.log("Image delete from local machine");
+      }
+
       const profile_url = uploadResult.secure_url;
       const profile_public_id = uploadResult.public_id;
 
@@ -172,9 +177,12 @@ export const addDepartment = (req, res) => {
     });
   }
 
+  const departNameToLowercae = departmentName.toLowerCase();
+  console.log("departNameToLowercaez:", departNameToLowercae);
+
   const checkDepartment =
     "select id from departments where department_name = ?";
-  db.query(checkDepartment, [departmentName], (err, departmentResult) => {
+  db.query(checkDepartment, [departNameToLowercae], (err, departmentResult) => {
     if (err) {
       console.log("err :", err);
 
@@ -201,7 +209,7 @@ export const addDepartment = (req, res) => {
         "insert into departments(department_name, ug1, ug2, ug3, pg1, pg2) values (?,?,?,?,?,?)";
       db.query(
         sql,
-        [departmentName, ug1, ug2, ug3, pg1, pg2],
+        [departNameToLowercae, ug1, ug2, ug3, pg1, pg2],
         (err, result) => {
           if (err) {
             console.log("err:", err);
@@ -282,8 +290,8 @@ const getPublicIdFromUrl = (url) => {
 };
 
 export const editTeacher = async (req, res) => {
-  // console.log("req.body :", req.body);
-  // console.log("req.file :", req.file);
+  console.log("req.body :", req.body);
+  console.log("req.file :", req.file);
 
   try {
     const { id } = req.params;
@@ -294,9 +302,12 @@ export const editTeacher = async (req, res) => {
       const uploadImage = await cloudinary.uploader.upload(req.file.path, {
         folder: "teacher",
       });
+      if (uploadImage.secure_url) {
+        fs.unlinkSync(req.file.path);
+        console.log("Image delete from local machine");
+      }
       profile = uploadImage.secure_url;
       uploadImagePublic_id = uploadImage.public_id;
-      fs.unlinkSync(req.file.path);
     }
     const sql = `update teachers
     set name = ?, email = ?, department = ?, profile = ?
@@ -342,11 +353,6 @@ export const editTeacher = async (req, res) => {
             console.log("Failed to delete old image:", deleteError);
           }
         }
-
-        return res.status(200).json({
-          success: true,
-          message: "Teacher Updated Successfully",
-        });
 
         return res.status(200).json({
           success: true,
@@ -422,4 +428,100 @@ export const deleteTeacher = (req, res) => {
       });
     });
   });
+};
+
+export const getAllDepartments = (req, res) => {
+  const sql = "select * from departments";
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log("err:", err);
+      return res.status(500).json({
+        success: false,
+        message: "Database Error",
+      });
+    }
+
+    if (result.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Department Data is Empty",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      departmentsData: result,
+    });
+  });
+};
+
+export const singleDepartment = (req, res) => {
+  const { id } = req.params;
+  const sql = "select * from departments where id = ?";
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.log("err:", err);
+
+      return res.status(500).json({
+        success: false,
+        message: "Database Error",
+      });
+    }
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Department Not Exist in Database",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      singleDepartmentData: result[0],
+    });
+  });
+};
+
+export const editDepartment = (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log("id : ", id);
+    console.log("req.body :", req.body);
+    const { departmentName, classes } = req.body;
+
+    const ug1 = classes.includes("UG-I");
+    const ug2 = classes.includes("UG-II");
+    const ug3 = classes.includes("UG-III");
+    const pg1 = classes.includes("PG-I");
+    const pg2 = classes.includes("PG-II");
+
+  const sql = `update departments
+  set department_name = ? ,ug1 = ?, ug2 = ?, ug3 = ?, pg1 = ?, pg2 = ?
+  where id = ?    
+  `;
+  db.query(sql,[departmentName, ug1, ug2, ug3, pg1, pg2, id], (err, result)=>{
+    if(err){
+      return res.status(500).json({
+        success : false,
+        message : "Database Error"
+      })
+    }
+
+    if(result.affectedRows === 0){
+      return res.status(404).json({
+        success : "false",
+        message : "Department NOt Found"
+      })
+    }
+
+    return res.status(200).json({
+      success : true,
+      message : "Department Updated Successfully"
+    })
+  })
+  } catch (error) {
+    return res.status(400).json(({
+      success : false,
+      message : "Failed To Update Department"
+    }))
+  }
 };

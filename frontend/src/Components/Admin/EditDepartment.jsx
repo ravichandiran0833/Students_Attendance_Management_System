@@ -1,80 +1,108 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux"
-import { addDepartment, clearDepartmentInfo,  clearError } from "../../redux/slices/adminSlice";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { clearEditDepartmentInfo, clearSingleDepartmentInfo, editDepartment, singleDepartment } from "../../redux/slices/adminSlice";
 import Loading from "../Loading";
-
-export const AddDepartment = () => {
-
-  const dispatch = useDispatch()
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+const EditDepartment = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate()
-  const {departmentInfo , error, loading} = useSelector((state)=>state.admin)
+  const { id } = useParams();
 
-    const adminSlice = useSelector((state) => state.admin);
-    console.log("Add department adminSlice : ", adminSlice);
+  const { loading, error, singleDepartmentInfo, editDepartmentInfo } = useSelector(
+    (state) => state.admin,
+  );
 
+  const singleDepartmentData = singleDepartmentInfo?.singleDepartmentData || {};
+  console.log("singledepartmentData :", singleDepartmentData);
 
   const [department, setDepartment] = useState({
     departmentName: "",
     classes: [],
   });
 
+  useEffect(() => {
+    if (singleDepartmentData && singleDepartmentData?.id) {
+      const classData = [];
+
+      if (singleDepartmentData) {
+        if (singleDepartmentData.ug1) classData.push("UG-I");
+        if (singleDepartmentData.ug2) classData.push("UG-II");
+        if (singleDepartmentData.ug3) classData.push("UG-III");
+        if (singleDepartmentData.pg1) classData.push("PG-I");
+        if (singleDepartmentData.pg2) classData.push("PG-II");
+      }
+      setDepartment({
+        departmentName: singleDepartmentData.department_name,
+        classes: classData,
+      });
+    }
+
+    
+    if(editDepartmentInfo?.success){
+      toast.success(editDepartmentInfo.message)
+      navigate("../view-departments")
+      dispatch(clearEditDepartmentInfo())
+    
+    }
+
+  
+
+
+  }, [singleDepartmentData,editDepartmentInfo,dispatch,navigate]);
+
+  // useEffect(()=>{
+  //     if(singledepartmentData){
+  //         setDepartment({
+  //             departmentName : singledepartmentData.department_name
+  //         })
+  //     }
+  // },[singledepartmentData])
+
+  useEffect(() => {
+    dispatch(singleDepartment(id));
+
+    return ()=>{
+      dispatch(clearSingleDepartmentInfo())
+    }
+  }, [dispatch, id]);
+
   const handleInput = (e) => {
-    setDepartment({
-      ...department,
-      departmentName: e.target.value,
-    });
+    const {name, value} = e.target
+    setDepartment((pre)=>({
+      ...pre,
+      [name] :value
+    }))
   };
 
   const handleCheckBox = (e) => {
-    const { value, checked } = e.target;
+    const { checked, value } = e.target;
 
-    if (checked) {
-      setDepartment({
-        ...department,
-        classes: [...department.classes, value],
-      });
-    } else {
-      setDepartment({
-        ...department,
-        classes: department.classes.filter((item) => item !== value),
-      });
+    if(checked){
+      setDepartment((prev)=>({
+        ...prev,
+        classes : [...prev.classes, value]
+      }))
+    }
+    else{
+      setDepartment((prev)=>({
+        ...prev,
+        classes : prev.classes.filter((item)=>item !== value)
+      }))
     }
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("addDepartment:", department);
-    dispatch(addDepartment(department))
-
+    e.preventDefault()
+    dispatch(editDepartment({id, department}))
   };
-
-  useEffect(()=>{
-    if(departmentInfo?.success){
-      toast.success(departmentInfo.message,{
-        autoClose : 2000
-      })
-      setTimeout(()=>{
-        navigate("/admin-dashboard");
-      },1000)
-      dispatch(clearDepartmentInfo())
-    }
-  },[departmentInfo,dispatch,navigate])
-
-    useEffect(() => {
-      if (error) {
-        toast.error(error.message || error);
-        dispatch(clearError());
-      }
-    }, [error,dispatch]);
 
   return (
     <>
-    {loading && <Loading/>}
+      {loading && <Loading />}
       <div className="w-full min-h-screen flex flex-col items-center py-6 md:py-10 px-4 bg-gray-400">
         <h1 className="text-2xl md:text-3xl text-white font-bold mb-10">
-          Add Department
+          Update Department
         </h1>
 
         <div className="w-70 md:w-xl lg:w-2xl bg-transparent shadow-[0_0_5px_whitesmoke] lg:shadow-[0_0_20px_whitesmoke] border border-gray-300 rounded">
@@ -103,6 +131,7 @@ export const AddDepartment = () => {
                   <input
                     type="checkbox"
                     value="UG-I"
+                    checked ={department.classes.includes("UG-I")}
                     onChange={handleCheckBox}
                   ></input>
                   <label>UG - I year</label>
@@ -112,6 +141,7 @@ export const AddDepartment = () => {
                   <input
                     type="checkbox"
                     value="UG-II"
+                    checked={department.classes.includes("UG-II")}
                     onChange={handleCheckBox}
                   ></input>
                   <label>UG - II year</label>
@@ -121,6 +151,7 @@ export const AddDepartment = () => {
                   <input
                     type="checkbox"
                     value="UG-III"
+                    checked={department.classes.includes("UG-III")}
                     onChange={handleCheckBox}
                   ></input>
                   <label>UG - III year</label>
@@ -129,6 +160,7 @@ export const AddDepartment = () => {
                   <input
                     type="checkbox"
                     value="PG-I"
+                    checked={department.classes.includes("PG-I")}
                     onChange={handleCheckBox}
                   ></input>
                   <label>PG - I year</label>
@@ -137,47 +169,13 @@ export const AddDepartment = () => {
                   <input
                     type="checkbox"
                     value="PG-II"
+                    checked={department.classes.includes("PG-II")}
                     onChange={handleCheckBox}
                   ></input>
                   <label>PG - II year</label>
                 </div>
               </div>
             </div>
-
-            {/* <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-              <label className="md:w-40">Email</label>
-              <input
-                type="email"
-                name="email"
-                className="border flex-1 px-4 py-1 lg:py-2 rounded outline-none"
-              />
-            </div>
-
-            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-              <label className="md:w-40">Password</label>
-              <input
-                type="password"
-                name="password"
-                className="border flex-1 px-4 py-1 lg:py-2 rounded outline-none"
-              />
-            </div>
-
-            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-              <label className="md:w-40">Department</label>
-              <select className="border flex-1 px-4 py-1 lg:py-2 rounded outline-none ">
-                <option className="bg-white text-black">Tamil</option>
-                <option className="bg-white text-black">English</option>
-              </select>
-            </div>
-
-            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-              <label className="md:w-40">Profile Pic</label>
-              <input
-                type="file"
-                name="profile"
-                className="border flex-1 min-w-0 py-1 lg:py-2 rounded"
-              />
-            </div> */}
 
             <button
               type="submit"
@@ -191,3 +189,5 @@ export const AddDepartment = () => {
     </>
   );
 };
+
+export default EditDepartment;

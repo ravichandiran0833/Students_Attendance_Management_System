@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {} from "react-redux"
-import { clearSingleTeacher, viewTeachers } from "../../redux/slices/adminSlice";
+import { clearSingleTeacher, getAllDepartments, viewTeachers } from "../../redux/slices/adminSlice";
 import Loading from "../Loading";
 export const AdminHome = () => {
 
@@ -10,13 +10,16 @@ export const AdminHome = () => {
   const adminSlice = useSelector((state)=>state.admin)
   console.log("Admin Home adminSlice :",adminSlice);
   
-  const {AllTeachersData, loading, singleTeacher} = useSelector((state)=>state.admin)
+  const {AllTeachersData, loading, singleTeacher,getAllDepartmentsInfo} = useSelector((state)=>state.admin)
 
   const teachersData = AllTeachersData?.teachersData || []
   console.log("Admin home teachersData :",teachersData);
+
+  const departmentsData = getAllDepartmentsInfo?.departmentsData || [];
   
   useEffect(()=>{
      dispatch(viewTeachers())
+     dispatch(getAllDepartments())
   },[dispatch])
 
   useEffect(()=>{
@@ -36,7 +39,7 @@ export const AdminHome = () => {
           </div>
           <div className="bg-blue-400 w-50 py-5 lg:w-70 lg:py-20 text-center text-white lg:text-xl font-bold shadow-[0_0_10px_whitesmoke] border border-gray-300 rounded admin-box2-animation">
             <p>Total Department</p>
-            <span>20</span>
+            <span>{departmentsData.length}</span>
           </div>
           <div className="bg-green-400 w-50 py-5 lg:w-70 lg:py-20 text-center  text-white lg:text-xl font-bold shadow-[0_0_10px_whitesmoke] border border-gray-300 rounded admin-box3-animation">
             <p>Total Students</p>

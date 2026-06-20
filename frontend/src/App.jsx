@@ -13,6 +13,8 @@ import { ViewTeachers } from "./Components/Admin/ViewTeachers";
 import AdminProtectRoute from "./Components/Admin/AdminProtectRoute";
 import { ToastContainer } from "react-toastify";
 import EditTeacher from "./Components/Admin/EditTeacher";
+import ViewDepartments from "./Components/Admin/ViewDepartments";
+import EditDepartment from "./Components/Admin/EditDepartment";
 
 function App() {
   return (
@@ -39,6 +41,8 @@ function App() {
             <Route path="add-department" element={<AddDepartment />} />
             <Route path="view-teachers" element={<ViewTeachers />} />
             <Route path="edit-teacher/:id" element={<EditTeacher />} />
+            <Route path="view-departments" element={<ViewDepartments/>}/>
+            <Route path="edit-department/:id" element={<EditDepartment/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
