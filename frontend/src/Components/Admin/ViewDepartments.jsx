@@ -1,8 +1,12 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 import {
   clearAllDepartmentsInfo,
+  clearDeleteDepartmentInfo,
+  clearError,
+  deleteDepartment,
   getAllDepartments,
 } from "../../redux/slices/adminSlice";
 import Loading from "../Loading";
@@ -12,7 +16,7 @@ const ViewDepartments = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
-  const { getAllDepartmentsInfo, loading } = useSelector(
+  const { getAllDepartmentsInfo, loading, deleteDepartmentInfo, error } = useSelector(
     (state) => state.admin,
   );
 
@@ -51,9 +55,25 @@ const ViewDepartments = () => {
     }
   }, [dispatch]);
 
+  useEffect(()=>{
+    if(error?.message){
+      toast.error(error.message)
+      dispatch(clearError())
+    }
+    if(deleteDepartmentInfo?.success){
+      toast.success(deleteDepartmentInfo.message)
+      dispatch(clearDeleteDepartmentInfo())
+      dispatch(getAllDepartments())
+    }
+  },[deleteDepartmentInfo,dispatch,error])
+
   const handleEditDepartment = (id) => {
     navigate(`../edit-department/${id}`)
   };
+
+  const handleDeleteDepartment =(id)=>{
+    dispatch(deleteDepartment(id))
+  }
 
   return (
     <>
@@ -102,7 +122,7 @@ const ViewDepartments = () => {
                       </button>
                       <button
                         className="bg-red-500 text-white px-2 py-1 rounded border-none outline-none cursor-pointer"
-                          // onClick={()=>handleDeleteTeacher(department.id)}
+                          onClick={()=>handleDeleteDepartment(department.id)}
                       >
                         Delete
                       </button>

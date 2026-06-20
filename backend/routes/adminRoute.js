@@ -1,5 +1,5 @@
 import express from "express"
-import {addDepartment, addTeacher, adminLogin, checkAdmin, deleteTeacher, editDepartment, editTeacher, getAllDepartments, singleDepartment, singleteacher, viewTeachers} from '../controllers/adminController.js'
+import {addDepartment, addTeacher, adminLogin, checkAdmin, deleteDepartment, deleteTeacher, editDepartment, editTeacher, getAllDepartments, singleDepartment, singleteacher, viewTeachers} from '../controllers/adminController.js'
 import adminAuthenticate from "../middleware/adminAuthentication.js"
 import adminAuthorize from "../middleware/adminAuthorization.js"
 import upload from "../middleware/upload.js"
@@ -23,5 +23,6 @@ router.delete("/deleteTeacher/:id", deleteTeacher)
 router.get("/getAllDepartments", getAllDepartments)
 router.get("/singleDepartment/:id",singleDepartment)
 router.put("/editDepartment/:id", editDepartment)
+router.delete("/deleteDepartment/:id", deleteDepartment)
 
 export default router

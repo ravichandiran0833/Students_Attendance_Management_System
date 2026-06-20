@@ -424,7 +424,7 @@ export const deleteTeacher = (req, res) => {
 
       return res.status(200).json({
         success: true,
-        message: "Deleted Successfully",
+        message: "Teacher Deleted Successfully",
       });
     });
   });
@@ -494,34 +494,75 @@ export const editDepartment = (req, res) => {
     const pg1 = classes.includes("PG-I");
     const pg2 = classes.includes("PG-II");
 
-  const sql = `update departments
+    const sql = `update departments
   set department_name = ? ,ug1 = ?, ug2 = ?, ug3 = ?, pg1 = ?, pg2 = ?
   where id = ?    
   `;
-  db.query(sql,[departmentName, ug1, ug2, ug3, pg1, pg2, id], (err, result)=>{
-    if(err){
-      return res.status(500).json({
-        success : false,
-        message : "Database Error"
-      })
-    }
+    db.query(
+      sql,
+      [departmentName, ug1, ug2, ug3, pg1, pg2, id],
+      (err, result) => {
+        if (err) {
+          return res.status(500).json({
+            success: false,
+            message: "Database Error",
+          });
+        }
 
-    if(result.affectedRows === 0){
-      return res.status(404).json({
-        success : "false",
-        message : "Department NOt Found"
-      })
-    }
+        if (result.affectedRows === 0) {
+          return res.status(404).json({
+            success: "false",
+            message: "Department NOt Found",
+          });
+        }
 
-    return res.status(200).json({
-      success : true,
-      message : "Department Updated Successfully"
-    })
-  })
+        return res.status(200).json({
+          success: true,
+          message: "Department Updated Successfully",
+        });
+      },
+    );
   } catch (error) {
-    return res.status(400).json(({
-      success : false,
-      message : "Failed To Update Department"
-    }))
+    return res.status(400).json({
+      success: false,
+      message: "Failed To Update Department",
+    });
+  }
+};
+
+export const deleteDepartment = (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log("delete id :", id);
+    const sql = "delete from  departments where id = ?";
+    db.query(sql, [id], (err, result) => {
+      if (err) {
+        console.log("err:", err);
+
+        return res.status(500).json({
+          success: false,
+          message: "Database Error",
+        });
+      }
+      console.log("delete result:", result);
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Department Not Found",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Department Deleted SuccessFully",
+      });
+    });
+  } catch (error) {
+    console.log("error:", error);
+    return res.status(400).json({
+      success: false,
+      message: "Failed To Delete Department",
+    });
   }
 };

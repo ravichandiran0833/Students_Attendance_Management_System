@@ -60,14 +60,13 @@ export const AddDepartment = () => {
       },1000)
       dispatch(clearDepartmentInfo())
     }
-  },[departmentInfo,dispatch,navigate])
-
-    useEffect(() => {
-      if (error) {
+    if (error) {
         toast.error(error.message || error);
         dispatch(clearError());
       }
-    }, [error,dispatch]);
+  },[departmentInfo,dispatch,navigate,error])
+
+
 
   return (
     <>
@@ -144,46 +143,13 @@ export const AddDepartment = () => {
               </div>
             </div>
 
-            {/* <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-              <label className="md:w-40">Email</label>
-              <input
-                type="email"
-                name="email"
-                className="border flex-1 px-4 py-1 lg:py-2 rounded outline-none"
-              />
-            </div>
-
-            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-              <label className="md:w-40">Password</label>
-              <input
-                type="password"
-                name="password"
-                className="border flex-1 px-4 py-1 lg:py-2 rounded outline-none"
-              />
-            </div>
-
-            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-              <label className="md:w-40">Department</label>
-              <select className="border flex-1 px-4 py-1 lg:py-2 rounded outline-none ">
-                <option className="bg-white text-black">Tamil</option>
-                <option className="bg-white text-black">English</option>
-              </select>
-            </div>
-
-            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-              <label className="md:w-40">Profile Pic</label>
-              <input
-                type="file"
-                name="profile"
-                className="border flex-1 min-w-0 py-1 lg:py-2 rounded"
-              />
-            </div> */}
 
             <button
               type="submit"
               className="bg-orange-500 hover:bg-blue-500 px-10 py-2 rounded-xl mx-auto cursor-pointer"
+              disabled={loading}
             >
-              Submit
+              Add Department
             </button>
           </form>
         </div>

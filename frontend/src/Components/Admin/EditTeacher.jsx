@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   clearAllDepartmentsInfo,
   clearEditTeacherInfo,
+  clearError,
   clearSingleTeacher,
   editTeacher,
   getAllDepartments,
@@ -20,6 +21,12 @@ const EditTeacher = () => {
     error,
     getAllDepartmentsInfo,
   } = useSelector((state) => state.admin);
+
+  console.log("Edit teacher error :",error);
+  
+
+
+  
 
   const adminSlice = useSelector((state) => state.admin);
   console.log("editTeacherInfo adminSlice :", adminSlice);
@@ -50,10 +57,18 @@ const EditTeacher = () => {
       setDepartment(teacherData.department);
       setOldProfile(teacherData.profile);
     }
-    if (error) {
-      toast.error(error.message || error);
+     if(error){
+       if(error && error.status === 404){
+        console.log("error status:",error.status);
+        
+      navigate("/admin-dashboard")
     }
-  }, [teacherData, error]);
+      toast.error(error.message || error)
+      dispatch(clearError())
+    }
+   
+    
+  }, [teacherData, error,dispatch,navigate]);
 
   useEffect(() => {
     dispatch(getSingleTeacher(id));
@@ -61,6 +76,7 @@ const EditTeacher = () => {
 
     return () => {
       dispatch(clearAllDepartmentsInfo());
+      dispatch(clearSingleTeacher())
     };
   }, [dispatch, id]);
 

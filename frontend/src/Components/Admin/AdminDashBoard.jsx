@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { clearAdminWelcome,  getDashboard, } from "../../redux/slices/adminSlice";
+import { clearAdminWelcome,  clearError,  getDashboard, } from "../../redux/slices/adminSlice";
 import { toast } from "react-toastify";
 import Loading from "../Loading";
 export const AdminDashBoard = () => {
@@ -12,7 +12,7 @@ export const AdminDashBoard = () => {
   const adminSlice = useSelector((state) => state.admin);
   console.log("dashboard adminSlice : ", adminSlice);
 
-  const { adminWelcome, loading, } = useSelector(
+  const { adminWelcome, loading, error } = useSelector(
     (state) => state.admin,
   );
   
@@ -34,8 +34,13 @@ export const AdminDashBoard = () => {
       dispatch(clearAdminWelcome())
     }
 
+    // if(error){
+    //   toast.error(error.message || error)
+    //   dispatch(clearError())
+    // }
+
     
-  }, [adminWelcome,dispatch]);
+  }, [adminWelcome,dispatch,error]);
 
   return (
     <>
@@ -48,7 +53,8 @@ export const AdminDashBoard = () => {
               location.pathname === "/admin-dashboard/add-department" ||
               location.pathname === "/admin-dashboard/view-teachers" ||
               location.pathname === "/admin-dashboard/view-departments" ||
-              location.pathname.startsWith("/admin-dashboard/edit-teacher")
+              location.pathname.startsWith("/admin-dashboard/edit-teacher") ||
+              location.pathname.startsWith("/admin-dashboard/edit-department")
                 ? "hidden md:block"
                 : "block"
             }

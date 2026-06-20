@@ -1,37 +1,54 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {} from "react-redux"
-import { clearSingleTeacher, getAllDepartments, viewTeachers } from "../../redux/slices/adminSlice";
+import {} from "react-redux";
+import {
+  clearError,
+  clearSingleTeacher,
+  getAllDepartments,
+  viewTeachers,
+} from "../../redux/slices/adminSlice";
 import Loading from "../Loading";
+import { toast } from "react-toastify";
 export const AdminHome = () => {
+  const dispatch = useDispatch();
 
-  const dispatch = useDispatch()
+  const adminSlice = useSelector((state) => state.admin);
+  console.log("Admin Home adminSlice :", adminSlice);
 
-  const adminSlice = useSelector((state)=>state.admin)
-  console.log("Admin Home adminSlice :",adminSlice);
-  
-  const {AllTeachersData, loading, singleTeacher,getAllDepartmentsInfo} = useSelector((state)=>state.admin)
+  const {
+    AllTeachersData,
+    loading,
+    singleTeacher,
+    getAllDepartmentsInfo,
+    error,
+  } = useSelector((state) => state.admin);
 
-  const teachersData = AllTeachersData?.teachersData || []
-  console.log("Admin home teachersData :",teachersData);
+  const teachersData = AllTeachersData?.teachersData || [];
+  console.log("Admin home teachersData :", teachersData);
 
   const departmentsData = getAllDepartmentsInfo?.departmentsData || [];
-  
-  useEffect(()=>{
-     dispatch(viewTeachers())
-     dispatch(getAllDepartments())
-  },[dispatch])
 
-  useEffect(()=>{
-    if(singleTeacher?.success){
-      dispatch(clearSingleTeacher())
+  useEffect(() => {
+    dispatch(viewTeachers());
+    dispatch(getAllDepartments());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (singleTeacher?.success) {
+      dispatch(clearSingleTeacher());
     }
-  },[singleTeacher,dispatch])
+    if (error) {
+      toast.error(error.message || error);
+      dispatch(clearError());
+    }
+  }, [singleTeacher, dispatch,error]);
   return (
     <>
-    {loading && <Loading/>}
+      {loading && <Loading />}
       <div className="w-full h-full flex flex-col items-center py-10  bg-gray-400">
-        <h1 className="text-md  lg:text-xl text-white font-bold bg-whitesmoke shadow-[0_0_10px_white] border border-none outline-none w-full text-center py-3">Admin Dashboard</h1>
+        <h1 className="text-md  lg:text-xl text-white font-bold bg-whitesmoke shadow-[0_0_10px_white] border border-none outline-none w-full text-center py-3">
+          Admin Dashboard
+        </h1>
         <div className="w-full flex flex-wrap gap-5 justify-evenly my-10 lg:my-30 ">
           <div className="bg-yellow-400 w-50 py-5 lg:w-70 lg:py-20  text-center text-white text-md lg:text-xl font-bold rounded shadow-[0_0_10px_whitesmoke] border border-gray-300  admin-box1-animation">
             <p className="">Total Teachers</p>

@@ -135,7 +135,7 @@ export const editTeacher = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.log("err :", error);
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response);
     }
   },
 );
@@ -203,6 +203,19 @@ export const editDepartment = createAsyncThunk("admin/editDepartment",async({id,
   }
 })
 
+export const deleteDepartment = createAsyncThunk("admin/deleteDepartment",async(id, thunkAPI)=>{
+  try {
+    const response = await axios.delete(`http://localhost:3000/api/auth/admin/deleteDepartment/${id}`,{
+      withCredentials : true
+    })
+
+    return response.data
+  } catch (error) {
+    console.log("error:",error.response);
+    return thunkAPI.rejectWithValue(error.response.data || error)
+  }
+})
+
 const adminSlice = createSlice({
   name: "adminSlice",
   initialState: {
@@ -218,6 +231,7 @@ const adminSlice = createSlice({
     getAllDepartmentsInfo : null,
     singleDepartmentInfo : null,
     editDepartmentInfo : null,
+    deleteDepartmentInfo : null,
     error: null,
   },
   reducers: {
@@ -253,6 +267,9 @@ const adminSlice = createSlice({
     },
     clearSingleDepartmentInfo : (state)=>{
       state.singleDepartmentInfo = null
+    },
+    clearDeleteDepartmentInfo : (state)=>{
+      state.deleteDepartmentInfo = null
     }
   },
   extraReducers: (builder) => {
@@ -374,6 +391,17 @@ const adminSlice = createSlice({
         state.loading = false,
         state.error = action.payload
       })
+      .addCase(deleteDepartment.pending, (state)=>{
+        state.loading = true
+      })
+      .addCase(deleteDepartment.fulfilled, (state, action)=>{
+        state.loading = false,
+        state.deleteDepartmentInfo = action.payload
+      })
+      .addCase(deleteDepartment.rejected, (state,action)=>{
+        state.loading = false,
+        state.error = action.payload
+      })
   },
 });
 
@@ -388,7 +416,8 @@ export const {
   clearDeleteTeacherInfo,
   clearAllDepartmentsInfo,
   clearEditDepartmentInfo,
-  clearSingleDepartmentInfo
+  clearSingleDepartmentInfo,
+  clearDeleteDepartmentInfo
 } = adminSlice.actions;
 
 export default adminSlice.reducer;

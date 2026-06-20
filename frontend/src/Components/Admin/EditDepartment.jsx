@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { clearEditDepartmentInfo, clearSingleDepartmentInfo, editDepartment, singleDepartment } from "../../redux/slices/adminSlice";
+import { clearEditDepartmentInfo, clearError, clearSingleDepartmentInfo, editDepartment, singleDepartment } from "../../redux/slices/adminSlice";
 import Loading from "../Loading";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -42,22 +42,17 @@ const EditDepartment = () => {
     if(editDepartmentInfo?.success){
       toast.success(editDepartmentInfo.message)
       navigate("../view-departments")
-      dispatch(clearEditDepartmentInfo())
-    
+      dispatch(clearEditDepartmentInfo())   
     }
 
-  
+    if(error?.message){
+          toast.error(error.message)
+          dispatch(clearError())
+    }
+
+  }, [singleDepartmentData,editDepartmentInfo,dispatch,navigate,error]);
 
 
-  }, [singleDepartmentData,editDepartmentInfo,dispatch,navigate]);
-
-  // useEffect(()=>{
-  //     if(singledepartmentData){
-  //         setDepartment({
-  //             departmentName : singledepartmentData.department_name
-  //         })
-  //     }
-  // },[singledepartmentData])
 
   useEffect(() => {
     dispatch(singleDepartment(id));
