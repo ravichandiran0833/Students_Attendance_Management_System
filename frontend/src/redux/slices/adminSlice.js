@@ -219,12 +219,27 @@ export const deleteDepartment = createAsyncThunk("admin/deleteDepartment",async(
 const adminSlice = createSlice({
   name: "adminSlice",
   initialState: {
+    loading:{
+
+      adminLogin : false,
+      getDashboard : false,
+      addTeacher : false,
+      addDepartment : false,
+      viewTeachers : false,
+      getSingleTeacher : false,
+      editTeacher : false,
+      deleteTeacher : false,
+      getAllDepartments : false,
+      singleDepartment : false,
+      editDepartment : false,
+      deleteDepartment : false,
+
+    },
     adminInfo: null,
     adminWelcome: null,
     teacherInfo: null,
     departmentInfo: null,
     AllTeachersData: null,
-    loading: false,
     singleTeacher: null,
     editTeacherInfo: null,
     deleteTeacherInfo : null,
@@ -276,130 +291,129 @@ const adminSlice = createSlice({
     builder
 
       .addCase(adminLogin.pending, (state) => {
-        state.loading = true;
+        state.loading.adminLogin = true;
       })
       .addCase(adminLogin.fulfilled, (state, action) => {
-        state.loading = false;
+        state.loading.adminLogin = false;
         state.adminInfo = action.payload;
       })
       .addCase(adminLogin.rejected, (state, action) => {
-        state.loading = false;
+        state.loading.adminLogin = false;
         state.error = action.payload;
       })
       .addCase(getDashboard.pending, (state) => {
-        state.loading = true;
+        state.loading.getDashboard = true;
       })
       .addCase(getDashboard.fulfilled, (state, action) => {
-        ((state.loading = false), (state.adminWelcome = action.payload));
+        ((state.loading.getDashboard = false), (state.adminWelcome = action.payload));
       })
       .addCase(getDashboard.rejected, (state, action) => {
-        ((state.loading = false), (state.error = action.payload));
+        ((state.loading.getDashboard = false), (state.error = action.payload));
       })
 
       .addCase(addTeacher.pending, (state) => {
-        ((state.loading = true), (state.error = null));
+        ((state.loading.addTeacher = true), (state.error = null));
       })
       .addCase(addTeacher.fulfilled, (state, action) => {
-        ((state.loading = false),
+        ((state.loading.addTeacher = false),
           (state.teacherInfo = action.payload),
           (state.error = null));
       })
       .addCase(addTeacher.rejected, (state, action) => {
-        ((state.loading = false), (state.error = action.payload));
+        ((state.loading.addTeacher = false), (state.error = action.payload));
       })
       .addCase(addDepartment.pending, (state) => {
-        state.loading = true;
+        state.loading.addDepartment = true;
       })
       .addCase(addDepartment.fulfilled, (state, action) => {
-        ((state.loading = false),
+        ((state.loading.addDepartment = false),
           (state.departmentInfo = action.payload),
           (state.error = null));
       })
       .addCase(addDepartment.rejected, (state, action) => {
-        ((state.loading = false), (state.error = action.payload));
+        ((state.loading.addDepartment = false), (state.error = action.payload));
       })
       .addCase(viewTeachers.pending, (state) => {
-        state.loading = true;
+        state.loading.viewTeachers = true;
       })
       .addCase(viewTeachers.fulfilled, (state, action) => {
-        ((state.loading = false), (state.AllTeachersData = action.payload));
+        ((state.loading.viewTeachers = false), (state.AllTeachersData = action.payload));
       })
       .addCase(viewTeachers.rejected, (state, action) => {
-        ((state.loading = false), (state.error = action.payload));
+        ((state.loading.viewTeachers = false), (state.error = action.payload));
       })
       .addCase(getSingleTeacher.pending, (state) => {
-        state.loading = true;
+        state.loading.getSingleTeacher = true;
       })
       .addCase(getSingleTeacher.fulfilled, (state, action) => {
-        ((state.loading = false), (state.singleTeacher = action.payload));
+        ((state.loading.getSingleTeacher = false), (state.singleTeacher = action.payload));
       })
       .addCase(getSingleTeacher.rejected, (state, action) => {
-        ((state.loading = false), (state.error = action.payload));
+        ((state.loading.getSingleTeacher = false), (state.error = action.payload));
       })
       .addCase(editTeacher.pending, (state) => {
-        state.loading = true;
+        state.loading.editTeacher = true;
       })
       .addCase(editTeacher.fulfilled, (state, action) => {
-        console.log("editTeacher payload :", action.payload);
 
-        ((state.loading = false), (state.editTeacherInfo = action.payload));
+        ((state.loading.editTeacher = false), (state.editTeacherInfo = action.payload));
       })
       .addCase(editTeacher.rejected, (state, action) => {
-        ((state.loading = false), (state.error = action.payload));
+        ((state.loading.editTeacher = false), (state.error = action.payload));
       })
       .addCase(deleteTeacher.pending, (state)=>{
-        state.loading = true
+        state.loading.deleteTeacher = true
       })
       .addCase(deleteTeacher.fulfilled, (state, action)=>{
-        state.loading = false
+        state.loading.deleteTeacher = false
         state.deleteTeacherInfo = action.payload
       })
       .addCase(deleteTeacher.rejected, (state, action)=>{
-        state.loading = false
+        state.loading.deleteTeacher = false
         state.error = action.payload
       })
       .addCase(getAllDepartments.pending, (state)=>{
-        state.loading = true
+        state.loading.getAllDepartments = true
       })
       .addCase(getAllDepartments.fulfilled, (state, action)=>{
-        state.loading = false,
+        state.loading.getAllDepartments = false,
         state.getAllDepartmentsInfo = action.payload
       })
       .addCase(getAllDepartments.rejected, (state, action)=>{
-        state.loading = false,
+        state.loading.getAllDepartments = false,
         state.error = action.payload
       })
       .addCase(singleDepartment.pending, (state)=>{
-        state.loading = true
+        state.loading.singleDepartment = true
       })
       .addCase(singleDepartment.fulfilled, (state, action)=>{
-        state.loading = false
+        state.loading.singleDepartment = false
         state.singleDepartmentInfo = action.payload
       })
       .addCase(singleDepartment.rejected, (state, action)=>{
-        state.loading = false,
+        state.loading.singleDepartment = false,
         state.error = action.payload
       })
       .addCase(editDepartment.pending, (state)=>{
-        state.loading = true
+        state.loading.editDepartment = true
       })
       .addCase(editDepartment.fulfilled, (state, action)=>{
-        state.loading = false,
+        state.loading.editDepartment = false,
         state.editDepartmentInfo = action.payload
       })
       .addCase(editDepartment.rejected, (state, action)=>{
-        state.loading = false,
+        state.loading.editDepartment = false,
         state.error = action.payload
       })
       .addCase(deleteDepartment.pending, (state)=>{
-        state.loading = true
+        state.loading.deleteDepartment = true
       })
       .addCase(deleteDepartment.fulfilled, (state, action)=>{
-        state.loading = false,
+        state.loading.deleteDepartment = false,
         state.deleteDepartmentInfo = action.payload
       })
       .addCase(deleteDepartment.rejected, (state,action)=>{
-        state.loading = false,
+        state.loading.deleteDepartment = false,
         state.error = action.payload
       })
   },

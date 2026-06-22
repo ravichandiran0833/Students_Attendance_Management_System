@@ -22,11 +22,7 @@ const EditTeacher = () => {
     getAllDepartmentsInfo,
   } = useSelector((state) => state.admin);
 
-  console.log("Edit teacher error :",error);
-  
-
-
-  
+  console.log("Edit teacher error :", error);
 
   const adminSlice = useSelector((state) => state.admin);
   console.log("editTeacherInfo adminSlice :", adminSlice);
@@ -57,18 +53,16 @@ const EditTeacher = () => {
       setDepartment(teacherData.department);
       setOldProfile(teacherData.profile);
     }
-     if(error){
-       if(error && error.status === 404){
-        console.log("error status:",error.status);
-        
-      navigate("/admin-dashboard")
+    if (error) {
+      if (error && error.status === 404) {
+        console.log("error status:", error.status);
+
+        navigate("/admin-dashboard");
+      }
+      toast.error(error.message || error);
+      dispatch(clearError());
     }
-      toast.error(error.message || error)
-      dispatch(clearError())
-    }
-   
-    
-  }, [teacherData, error,dispatch,navigate]);
+  }, [teacherData, error, dispatch, navigate]);
 
   useEffect(() => {
     dispatch(getSingleTeacher(id));
@@ -76,11 +70,9 @@ const EditTeacher = () => {
 
     return () => {
       dispatch(clearAllDepartmentsInfo());
-      dispatch(clearSingleTeacher())
+      dispatch(clearSingleTeacher());
     };
   }, [dispatch, id]);
-
-
 
   useEffect(() => {
     if (editTeacherInfo?.success) {
@@ -112,82 +104,90 @@ const EditTeacher = () => {
 
   return (
     <>
-      {loading && <Loading />}
-      <div className="w-full min-h-screen flex flex-col items-center py-6 md:py-10 px-4 bg-gray-400">
-        <h1 className="text-2xl md:text-3xl text-white font-bold mb-10">
-          Update Teacher
-        </h1>
+      <div className="relative w-full min-h-screen">
+        {loading.editTeacher && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/20">
+            <Loading />
+          </div>
+        )}
+        <div
+          className={`w-full min-h-screen flex flex-col items-center py-6 md:py-10 px-4 bg-gray-400 transition-opacity duration-300 ${loading.editTeacher || loading.getAllDepartments ? "opacity-50 pointer-events-none" : "opacity-100"}`}
+        >
+          <h1 className="text-2xl md:text-3xl text-white font-bold mb-10">
+            Update Teacher
+          </h1>
 
-        <div className="w-70 md:w-xl lg:w-full lg:max-w-2xl bg-transparent shadow-[0_0_5px_whitesmoke] lg:shadow-[0_0_20px_whitesmoke] border border-gray-300 rounded">
-          <form
-            className="flex flex-col gap-3 lg:gap-6 p-4 md:p-8 text-white"
-            onSubmit={handleSubmit}
-          >
-            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-              <label className="md:w-40">Name</label>
-              <input
-                type="text"
-                name="name"
-                required
-                value={name}
-                className="border flex-1 px-4 py-1 lg:py-2 rounded outline-none"
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-
-            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-              <label className="md:w-40">Email</label>
-              <input
-                type="email"
-                name="email"
-                required
-                value={email}
-                className="border flex-1 px-4 py-1 lg:py-2 rounded outline-none"
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-
-            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-              <label className="md:w-40">Department</label>
-              <select
-                className="border flex-1 px-4 py-1 lg:py-2 rounded outline-none "
-                required
-                value={department}
-                onChange={(e) => setDepartment(e.target.value)}
-              >
-                <option value="">Select Department</option>
-
-                {departmentsData.map((department, index) => (
-                  <option
-                    className="bg-white text-black"
-                    key={index}
-                    value={department.department_name}
-                  >
-                    {department.department_name.charAt(0).toUpperCase() +
-                      department.department_name.slice(1)}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-              <label className="md:w-40">Profile Pic</label>
-              <input
-                type="file"
-                name="profile"
-                className="border flex-1 pl-5 py-1 lg:py-2 rounded"
-                onChange={(e) => setProfile(e.target.files[0])}
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="bg-orange-500 hover:bg-blue-500 px-10 py-2 rounded-xl mx-auto cursor-pointer"
-              disabled={loading}
+          <div className="w-70 md:w-xl lg:w-full lg:max-w-2xl bg-transparent shadow-[0_0_5px_whitesmoke] lg:shadow-[0_0_20px_whitesmoke] border border-gray-300 rounded">
+            <form
+              className="flex flex-col gap-3 lg:gap-6 p-4 md:p-8 text-white"
+              onSubmit={handleSubmit}
             >
-              {loading ? "Update..." : "Update Teacher"}
-            </button>
-          </form>
+              <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                <label className="md:w-40">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  required
+                  value={name}
+                  className="border flex-1 px-4 py-1 lg:py-2 rounded outline-none"
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                <label className="md:w-40">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  value={email}
+                  className="border flex-1 px-4 py-1 lg:py-2 rounded outline-none"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                <label className="md:w-40">Department</label>
+                <select
+                  className="border flex-1 px-4 py-1 lg:py-2 rounded outline-none "
+                  required
+                  value={department}
+                  onChange={(e) => setDepartment(e.target.value)}
+                >
+                  <option value="">Select Department</option>
+
+                  {departmentsData.map((department, index) => (
+                    <option
+                      className="bg-white text-black"
+                      key={index}
+                      value={department.department_name}
+                    >
+                      {department.department_name.charAt(0).toUpperCase() +
+                        department.department_name.slice(1)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                <label className="md:w-40">Profile Pic</label>
+                <input
+                  type="file"
+                  name="profile"
+                  className="border flex-1 pl-5 py-1 lg:py-2 rounded"
+                  onChange={(e) => setProfile(e.target.files[0])}
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="bg-orange-500 hover:bg-blue-500 px-10 py-2 rounded-xl mx-auto cursor-pointer"
+                disabled={loading.editTeacher}
+              >
+                {loading.editTeacher ? "Update..." : "Update Teacher"}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </>

@@ -41,10 +41,9 @@ export const AdminHome = () => {
       toast.error(error.message || error);
       dispatch(clearError());
     }
-  }, [singleTeacher, dispatch,error]);
+  }, [singleTeacher, dispatch, error]);
   return (
     <>
-      {loading && <Loading />}
       <div className="w-full h-full flex flex-col items-center py-10  bg-gray-400">
         <h1 className="text-md  lg:text-xl text-white font-bold bg-whitesmoke shadow-[0_0_10px_white] border border-none outline-none w-full text-center py-3">
           Admin Dashboard
