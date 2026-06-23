@@ -83,6 +83,9 @@ export const checkAdmin = (req, res) => {
 export const addTeacher = async (req, res) => {
   const { name, email, password, department } = req.body;
 
+  console.log("req.body :",req.body);
+  
+
   if (!req.file) {
     return res.status(400).json({
       success: false,

@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
-const adminAuthenticate = (req, res, next) => {
+const authenticate = (req, res, next) => {
   const token = req.cookies.token;
   if (!token) {
     return res.status(401).json({
@@ -22,4 +22,4 @@ const adminAuthenticate = (req, res, next) => {
   }
 };
 
-export default adminAuthenticate;
+export default authenticate;

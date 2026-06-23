@@ -1,12 +1,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+
+const backendUrl = import.meta.env.VITE_BACKEND_URL
+console.log("backendUrl:",backendUrl);
+
+
 export const adminLogin = createAsyncThunk(
   "admin/adminLogin",
   async (adminData, thunkAPI) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/admin/login",
+        `${backendUrl}/api/auth/admin/login`,
         adminData,
         {
           withCredentials: true,
@@ -25,7 +30,7 @@ export const getDashboard = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/auth/admin/dashboard",
+        `${backendUrl}/api/auth/admin/dashboard`,
         {
           withCredentials: true,
         },
@@ -46,7 +51,7 @@ export const addTeacher = createAsyncThunk(
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/admin/addTeacher",
+        `${backendUrl}/api/auth/admin/addTeacher`,
         teacherData,
         {
           withCredentials: true,
@@ -68,7 +73,7 @@ export const addDepartment = createAsyncThunk(
   async (departmentData, thunkAPI) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/admin/addDepartment",
+        `${backendUrl}/api/auth/admin/addDepartment`,
         departmentData,
         {
           withCredentials: true,
@@ -88,7 +93,7 @@ export const viewTeachers = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/auth/admin/viewTeachers",
+        `${backendUrl}/api/auth/admin/viewTeachers`,
         {
           withCredentials: true,
         },
@@ -107,7 +112,7 @@ export const getSingleTeacher = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/auth/admin/singleTeacher/${id}`,
+        `${backendUrl}/api/auth/admin/singleTeacher/${id}`,
         {
           withCredentials: true,
         },
@@ -126,7 +131,7 @@ export const editTeacher = createAsyncThunk(
   async ({ id, formData: teacherData }, thunkAPI) => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/api/auth/admin/editTeacher/${id}`,
+        `${backendUrl}/api/auth/admin/editTeacher/${id}`,
         teacherData,
         {
           withCredentials: true,
@@ -145,95 +150,109 @@ export const deleteTeacher = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/auth/admin/deleteTeacher/${id}`,
+        `${backendUrl}/api/auth/admin/deleteTeacher/${id}`,
         {
-          withCredentials : true
-        }
+          withCredentials: true,
+        },
       );
       return response.data;
     } catch (error) {
-      console.log("error:",error.response);
-      return thunkAPI.rejectWithValue(error.response.data)
-      
+      console.log("error:", error.response);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   },
 );
 
-export const getAllDepartments = createAsyncThunk("admin/getAllDepartments", async(_, thunkAPI)=>{
-  try {
-    const response = await axios.get("http://localhost:3000/api/auth/admin/getAllDepartments",
-      {
-        withCredentials : true
-      }
-    )
-    return response.data 
-  } catch (error) {
-    console.log("error:",error);
-    return thunkAPI.rejectWithValue(error.response.data || error) 
-  }
-})
+export const getAllDepartments = createAsyncThunk(
+  "admin/getAllDepartments",
+  async (_, thunkAPI) => {
+    try {
+      const response = await axios.get(
+        `${backendUrl}/api/auth/admin/getAllDepartments`,
+        {
+          withCredentials: true,
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.log("error:", error);
+      return thunkAPI.rejectWithValue(error.response.data || error);
+    }
+  },
+);
 
-export const singleDepartment = createAsyncThunk("admin/singleDepartment",async(id, thunkAPI)=>{
-  try {
-    const response = await axios.get(`http://localhost:3000/api/auth/admin/singleDepartment/${id}`,
-      {
-        withCredentials : true
-      }
-    )
-    return response.data
-  } catch (error) {
-    console.log("error:",error);
-    return thunkAPI.rejectWithValue(error.response.data || error)   
-  }
-})
+export const singleDepartment = createAsyncThunk(
+  "admin/singleDepartment",
+  async (id, thunkAPI) => {
+    try {
+      const response = await axios.get(
+        `${backendUrl}/api/auth/admin/singleDepartment/${id}`,
+        {
+          withCredentials: true,
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.log("error:", error);
+      return thunkAPI.rejectWithValue(error.response.data || error);
+    }
+  },
+);
 
-export const editDepartment = createAsyncThunk("admin/editDepartment",async({id, department},thunkAPI)=>{
-  try {
-    const response = await axios.put(`http://localhost:3000/api/auth/admin/editDepartment/${id}`,
-      department,
-      {
-        withCredentials : true
-      }
-    )
-    return response.data
-  } catch (error) {
-    console.log("error:",error.response);
-    return thunkAPI.rejectWithValue(error.response.data || error)
-    
-  }
-})
+export const editDepartment = createAsyncThunk(
+  "admin/editDepartment",
+  async ({ id, department }, thunkAPI) => {
+    try {
+      const response = await axios.put(
+        `${backendUrl}/api/auth/admin/editDepartment/${id}`,
+        department,
+        {
+          withCredentials: true,
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.log("error:", error.response);
+      return thunkAPI.rejectWithValue(error.response.data || error);
+    }
+  },
+);
 
-export const deleteDepartment = createAsyncThunk("admin/deleteDepartment",async(id, thunkAPI)=>{
-  try {
-    const response = await axios.delete(`http://localhost:3000/api/auth/admin/deleteDepartment/${id}`,{
-      withCredentials : true
-    })
+export const deleteDepartment = createAsyncThunk(
+  "admin/deleteDepartment",
+  async (id, thunkAPI) => {
+    try {
+      const response = await axios.delete(
+        `${backendUrl}/api/auth/admin/deleteDepartment/${id}`,
+        {
+          withCredentials: true,
+        },
+      );
 
-    return response.data
-  } catch (error) {
-    console.log("error:",error.response);
-    return thunkAPI.rejectWithValue(error.response.data || error)
-  }
-})
+      return response.data;
+    } catch (error) {
+      console.log("error:", error.response);
+      return thunkAPI.rejectWithValue(error.response.data || error);
+    }
+  },
+);
 
 const adminSlice = createSlice({
   name: "adminSlice",
   initialState: {
-    loading:{
-
-      adminLogin : false,
-      getDashboard : false,
-      addTeacher : false,
-      addDepartment : false,
-      viewTeachers : false,
-      getSingleTeacher : false,
-      editTeacher : false,
-      deleteTeacher : false,
-      getAllDepartments : false,
-      singleDepartment : false,
-      editDepartment : false,
-      deleteDepartment : false,
-
+    loading: {
+      adminLogin: false,
+      getDashboard: false,
+      addTeacher: false,
+      addDepartment: false,
+      viewTeachers: false,
+      getSingleTeacher: false,
+      editTeacher: false,
+      deleteTeacher: false,
+      getAllDepartments: false,
+      singleDepartment: false,
+      editDepartment: false,
+      deleteDepartment: false,
     },
     adminInfo: null,
     adminWelcome: null,
@@ -242,11 +261,11 @@ const adminSlice = createSlice({
     AllTeachersData: null,
     singleTeacher: null,
     editTeacherInfo: null,
-    deleteTeacherInfo : null,
-    getAllDepartmentsInfo : null,
-    singleDepartmentInfo : null,
-    editDepartmentInfo : null,
-    deleteDepartmentInfo : null,
+    deleteTeacherInfo: null,
+    getAllDepartmentsInfo: null,
+    singleDepartmentInfo: null,
+    editDepartmentInfo: null,
+    deleteDepartmentInfo: null,
     error: null,
   },
   reducers: {
@@ -271,21 +290,21 @@ const adminSlice = createSlice({
     clearSingleTeacher: (state) => {
       state.singleTeacher = null;
     },
-    clearDeleteTeacherInfo : (state)=>{
-      state.deleteTeacherInfo = null
+    clearDeleteTeacherInfo: (state) => {
+      state.deleteTeacherInfo = null;
     },
-    clearAllDepartmentsInfo : (state)=>{
-      state.getAllDepartmentsInfo = null
+    clearAllDepartmentsInfo: (state) => {
+      state.getAllDepartmentsInfo = null;
     },
-    clearEditDepartmentInfo : (state)=>{
-      state.editDepartmentInfo = null
+    clearEditDepartmentInfo: (state) => {
+      state.editDepartmentInfo = null;
     },
-    clearSingleDepartmentInfo : (state)=>{
-      state.singleDepartmentInfo = null
+    clearSingleDepartmentInfo: (state) => {
+      state.singleDepartmentInfo = null;
     },
-    clearDeleteDepartmentInfo : (state)=>{
-      state.deleteDepartmentInfo = null
-    }
+    clearDeleteDepartmentInfo: (state) => {
+      state.deleteDepartmentInfo = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -305,7 +324,8 @@ const adminSlice = createSlice({
         state.loading.getDashboard = true;
       })
       .addCase(getDashboard.fulfilled, (state, action) => {
-        ((state.loading.getDashboard = false), (state.adminWelcome = action.payload));
+        ((state.loading.getDashboard = false),
+          (state.adminWelcome = action.payload));
       })
       .addCase(getDashboard.rejected, (state, action) => {
         ((state.loading.getDashboard = false), (state.error = action.payload));
@@ -337,7 +357,8 @@ const adminSlice = createSlice({
         state.loading.viewTeachers = true;
       })
       .addCase(viewTeachers.fulfilled, (state, action) => {
-        ((state.loading.viewTeachers = false), (state.AllTeachersData = action.payload));
+        ((state.loading.viewTeachers = false),
+          (state.AllTeachersData = action.payload));
       })
       .addCase(viewTeachers.rejected, (state, action) => {
         ((state.loading.viewTeachers = false), (state.error = action.payload));
@@ -346,76 +367,78 @@ const adminSlice = createSlice({
         state.loading.getSingleTeacher = true;
       })
       .addCase(getSingleTeacher.fulfilled, (state, action) => {
-        ((state.loading.getSingleTeacher = false), (state.singleTeacher = action.payload));
+        ((state.loading.getSingleTeacher = false),
+          (state.singleTeacher = action.payload));
       })
       .addCase(getSingleTeacher.rejected, (state, action) => {
-        ((state.loading.getSingleTeacher = false), (state.error = action.payload));
+        ((state.loading.getSingleTeacher = false),
+          (state.error = action.payload));
       })
       .addCase(editTeacher.pending, (state) => {
         state.loading.editTeacher = true;
       })
       .addCase(editTeacher.fulfilled, (state, action) => {
-
-        ((state.loading.editTeacher = false), (state.editTeacherInfo = action.payload));
+        ((state.loading.editTeacher = false),
+          (state.editTeacherInfo = action.payload));
       })
       .addCase(editTeacher.rejected, (state, action) => {
         ((state.loading.editTeacher = false), (state.error = action.payload));
       })
-      .addCase(deleteTeacher.pending, (state)=>{
-        state.loading.deleteTeacher = true
+      .addCase(deleteTeacher.pending, (state) => {
+        state.loading.deleteTeacher = true;
       })
-      .addCase(deleteTeacher.fulfilled, (state, action)=>{
-        state.loading.deleteTeacher = false
-        state.deleteTeacherInfo = action.payload
+      .addCase(deleteTeacher.fulfilled, (state, action) => {
+        state.loading.deleteTeacher = false;
+        state.deleteTeacherInfo = action.payload;
       })
-      .addCase(deleteTeacher.rejected, (state, action)=>{
-        state.loading.deleteTeacher = false
-        state.error = action.payload
+      .addCase(deleteTeacher.rejected, (state, action) => {
+        state.loading.deleteTeacher = false;
+        state.error = action.payload;
       })
-      .addCase(getAllDepartments.pending, (state)=>{
-        state.loading.getAllDepartments = true
+      .addCase(getAllDepartments.pending, (state) => {
+        state.loading.getAllDepartments = true;
       })
-      .addCase(getAllDepartments.fulfilled, (state, action)=>{
-        state.loading.getAllDepartments = false,
-        state.getAllDepartmentsInfo = action.payload
+      .addCase(getAllDepartments.fulfilled, (state, action) => {
+        ((state.loading.getAllDepartments = false),
+          (state.getAllDepartmentsInfo = action.payload));
       })
-      .addCase(getAllDepartments.rejected, (state, action)=>{
-        state.loading.getAllDepartments = false,
-        state.error = action.payload
+      .addCase(getAllDepartments.rejected, (state, action) => {
+        ((state.loading.getAllDepartments = false),
+          (state.error = action.payload));
       })
-      .addCase(singleDepartment.pending, (state)=>{
-        state.loading.singleDepartment = true
+      .addCase(singleDepartment.pending, (state) => {
+        state.loading.singleDepartment = true;
       })
-      .addCase(singleDepartment.fulfilled, (state, action)=>{
-        state.loading.singleDepartment = false
-        state.singleDepartmentInfo = action.payload
+      .addCase(singleDepartment.fulfilled, (state, action) => {
+        state.loading.singleDepartment = false;
+        state.singleDepartmentInfo = action.payload;
       })
-      .addCase(singleDepartment.rejected, (state, action)=>{
-        state.loading.singleDepartment = false,
-        state.error = action.payload
+      .addCase(singleDepartment.rejected, (state, action) => {
+        ((state.loading.singleDepartment = false),
+          (state.error = action.payload));
       })
-      .addCase(editDepartment.pending, (state)=>{
-        state.loading.editDepartment = true
+      .addCase(editDepartment.pending, (state) => {
+        state.loading.editDepartment = true;
       })
-      .addCase(editDepartment.fulfilled, (state, action)=>{
-        state.loading.editDepartment = false,
-        state.editDepartmentInfo = action.payload
+      .addCase(editDepartment.fulfilled, (state, action) => {
+        ((state.loading.editDepartment = false),
+          (state.editDepartmentInfo = action.payload));
       })
-      .addCase(editDepartment.rejected, (state, action)=>{
-        state.loading.editDepartment = false,
-        state.error = action.payload
+      .addCase(editDepartment.rejected, (state, action) => {
+        ((state.loading.editDepartment = false),
+          (state.error = action.payload));
       })
-      .addCase(deleteDepartment.pending, (state)=>{
-        state.loading.deleteDepartment = true
+      .addCase(deleteDepartment.pending, (state) => {
+        state.loading.deleteDepartment = true;
       })
-      .addCase(deleteDepartment.fulfilled, (state, action)=>{
-        state.loading.deleteDepartment = false,
-        state.deleteDepartmentInfo = action.payload
+      .addCase(deleteDepartment.fulfilled, (state, action) => {
+        ((state.loading.deleteDepartment = false),
+          (state.deleteDepartmentInfo = action.payload));
       })
-      .addCase(deleteDepartment.rejected, (state,action)=>{
-        state.loading.deleteDepartment = false,
-        state.error = action.payload
-      })
+      .addCase(deleteDepartment.rejected, (state, action) => {
+        ((state.loading.deleteDepartment = false),
+          (state.error = action.payload));
+      });
   },
 });
 
@@ -431,7 +454,7 @@ export const {
   clearAllDepartmentsInfo,
   clearEditDepartmentInfo,
   clearSingleDepartmentInfo,
-  clearDeleteDepartmentInfo
+  clearDeleteDepartmentInfo,
 } = adminSlice.actions;
 
 export default adminSlice.reducer;

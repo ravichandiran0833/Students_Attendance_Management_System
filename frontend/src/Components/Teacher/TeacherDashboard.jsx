@@ -1,6 +1,29 @@
 import React from "react";
-
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { allDepartments, clearAllDepartmentsError } from "../../redux/slices/teacherSlice";
+import { toast } from "react-toastify";
 export const TeacherDashboard = () => {
+  const dispatch = useDispatch();
+
+  const { allDepartmentsInfo, error } = useSelector((state) => state.teacher);
+
+  const departmentsData = allDepartmentsInfo?.allDepartmentsData;
+  console.log("departmentsData:",departmentsData);
+  
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error.teacherInfo?.message, {
+        autoClose: 2000,
+      });
+      dispatch(clearAllDepartmentsError())
+    }
+  }, [error,dispatch]);
+
+  useEffect(() => {
+    dispatch(allDepartments());
+  }, [dispatch]);
   const departments = [
     {
       name: "Tamil",

@@ -1,6 +1,6 @@
 import express from "express"
 import {addDepartment, addTeacher, adminLogin, checkAdmin, deleteDepartment, deleteTeacher, editDepartment, editTeacher, getAllDepartments, singleDepartment, singleteacher, viewTeachers} from '../controllers/adminController.js'
-import adminAuthenticate from "../middleware/adminAuthentication.js"
+import authenticate from "../middleware/adminAuthentication.js"
 import adminAuthorize from "../middleware/adminAuthorization.js"
 import upload from "../middleware/upload.js"
 import { uploadImage } from "../middleware/uploadImage.js"
@@ -10,7 +10,7 @@ const router = express.Router()
 
 router.post("/login", adminLogin)
 
-router.use(adminAuthenticate)
+router.use(authenticate)
 router.use(adminAuthorize("admin"))
 
 router.get("/dashboard", checkAdmin)

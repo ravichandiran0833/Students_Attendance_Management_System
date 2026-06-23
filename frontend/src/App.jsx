@@ -15,6 +15,7 @@ import { ToastContainer } from "react-toastify";
 import EditTeacher from "./Components/Admin/EditTeacher";
 import ViewDepartments from "./Components/Admin/ViewDepartments";
 import EditDepartment from "./Components/Admin/EditDepartment";
+import TeacherProtectRoute from "./Components/Teacher/TeacherProtectRoute";
 
 function App() {
   return (
@@ -25,8 +26,20 @@ function App() {
           <Route index element={<UserRole />}></Route>
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/teacher-login" element={<TeacherLogin />} />
-          <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
+
+          {/* <Route path="/teacher-dashboard" element={<TeacherDashboard />} /> */}
           <Route path="/attendance-page" element={<AttendancePage />} />
+
+          <Route
+          path="/teacher-dashboard"
+          element={
+            <TeacherProtectRoute>
+              <TeacherDashboard></TeacherDashboard>
+            </TeacherProtectRoute>
+          }
+          >
+
+          </Route>
 
           <Route
             path="/admin-dashboard"

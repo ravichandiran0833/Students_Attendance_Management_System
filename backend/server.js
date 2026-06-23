@@ -3,6 +3,7 @@ import cors from "cors"
 import db from "./database/db.js"
 
 import adminRoute from "./routes/adminRoute.js"
+import teacherRoute from "./routes/teacherRoute.js"
 import cookieParser from "cookie-parser"
 import dotenv from "dotenv"
 
@@ -25,6 +26,7 @@ app.use(cors({
 app.use(cookieParser())
 
 app.use("/api/auth/admin", adminRoute)
+app.use("/api/auth/teacher", teacherRoute)
 
 app.listen(3000, ()=>{
     console.log("server is running");
