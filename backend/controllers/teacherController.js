@@ -36,7 +36,7 @@ export const teacherLogin = (req, res) => {
           message: "Database Error",
         });
       }
-      // console.log("result :", result);
+      console.log("result :", result);
 
       if (result.length === 0) {
         return res.status(401).json({
@@ -145,3 +145,100 @@ export const allDepartments = async (req, res) => {
 //     allDepartmentsData : result
 //   })
 // })
+
+export const departmentStudents = async (req, res) => {
+  // console.log("req.body:",req.body);
+
+  try {
+    const { departmentName, graduate, year } = req.body;
+
+    if (!departmentName || !graduate || !year) {
+      return res.status(400).json({
+        success: false,
+        message: "Department Details is Empty",
+      });
+    }
+
+    const sql =
+      "select * from students where department_name = ? and graduate = ? and year = ? order by register_no asc";
+    const [result] = await db
+      .promise()
+      .query(sql, [departmentName, graduate, year]);
+    // console.log("result :",result);
+    if (result.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "Students Data is Empty",
+        departmentStudentsData: [],
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      departmentStudentsData: result,
+    });
+  } catch (error) {
+    console.log("error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
+
+export const submitAttendance = async (req, res) => {
+  // console.log("req.body :", req.body);
+  try {
+    const attendanceData = Object.values(req.body);
+    let existingCount = 0;
+    console.log(attendanceData);
+    for (const student of attendanceData) {
+      console.log("student:", student);
+      const { studentId, registerNo, status, attendanceDate } = student;
+
+      const checkSql =
+        "select id from attendance where register_no =? and attendance_date=?";
+      const [existingData] = await db
+        .promise()
+        .query(checkSql, [registerNo, attendanceDate]);
+
+      if (existingData.length > 0) {
+        existingCount++;
+        continue;
+      }
+
+      const insertSql = `insert into attendance
+      (
+      student_id,
+      register_no,
+      attendance_date,
+      status
+      )
+      values(?,?,?,?)
+      `;
+      const [result] = await db
+        .promise()
+        .query(insertSql, [studentId, registerNo, attendanceDate, status]);
+
+      console.log("result :", result);
+    }
+
+    if (existingCount === attendanceData.length) {
+      return res.status(400).json({
+        success: false,
+        message: "Attendance Already Submitted",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Attendance Submitted Successfully",
+    });
+  } catch (error) {
+    console.log("error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};

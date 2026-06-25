@@ -32,19 +32,54 @@ export const allDepartments = createAsyncThunk("teacher/allDepartments", async(_
     }
 })
 
+export const departmentStudents = createAsyncThunk("teacher/departmentStudents", async(data, thunkAPI)=>{
+    console.log("data:",data);
+    
+    try {
+        const response = await axios.post(`${backendUrl}/api/auth/teacher/departmentStudents`,data,{
+            withCredentials : true
+        })
+        
+        return response.data
+    } catch (error) {
+        console.log("error:",error.response);
+        return thunkAPI.rejectWithValue(error.response?.data || error)
+        
+    }
+}) 
+
+export const submitAttendance = createAsyncThunk("teacher/submitAttendance", async(attendanceData, thunkAPI)=>{
+    try {
+        const response = await axios.post(`${backendUrl}/api/auth/teacher/submitAttendance`, attendanceData, {
+            withCredentials : true
+        })
+        return response.data
+    } catch (error) {
+        console.log("error:",error.response);
+        return thunkAPI.rejectWithValue(error.response?.data || error.message)
+        
+    }
+})
+
 const teacherSlice = createSlice({
     name : "teacherSlice",
     teacherInfo : null,
     isAuthenticated : false,
     allDepartmentsInfo : null,
+    departmentStudentsInfo : null,
+    submitAttendanceInfo : null,
     initialState : {
         loading : {
             teacherInfo : false,
-            allDepartments : false
+            allDepartments : false,
+            departmentStudents : false,
+            submitAttendance : false
         },
         error : {
              teacherInfo : null,
-             allDepartments : null
+             allDepartments : null,
+             departmentStudents : null,
+             submitAttendance : null
         }
     },
     reducers : {
@@ -54,9 +89,25 @@ const teacherSlice = createSlice({
         clearTeacherInfo : (state)=>{
             state.teacherInfo = null
         },
+        clearAllDepartmentsInfo : (state)=>{
+            state.allDepartmentsInfo = null
+        },
         clearAllDepartmentsError : (state)=>{
             state.error.allDepartments = null
+        },
+        clearDepartmenStudentsInfo :(state)=>{
+            state.departmentStudentsInfo = null
+        },
+        clearDepartmentStudentsError : (state)=>{
+            state.error.departmentStudents = null
+        },
+        clearSubmitAttendanceError : (state)=>{
+            state.error.submitAttendance = null
+        },
+        clearSubmitAttendanceInfo : (state)=>{
+            state.submitAttendanceInfo = null
         }
+
 
     },
 
@@ -86,6 +137,28 @@ const teacherSlice = createSlice({
             state.loading.allDepartments = false,
             state.error.allDepartments = action.payload
         })
+        .addCase(departmentStudents.pending, (state)=>{
+            state.loading.departmentStudents = true
+        })
+        .addCase(departmentStudents.fulfilled, (state, action)=>{
+            state.loading.departmentStudents = false,
+            state.departmentStudentsInfo = action.payload
+        })
+        .addCase(departmentStudents.rejected, (state, action)=>{
+            state.loading.departmentStudents = false,
+            state.error.departmentStudents = action.payload
+        })
+        .addCase(submitAttendance.pending, (state)=>{
+            state.loading.submitAttendance = true
+        })
+        .addCase(submitAttendance.fulfilled, (state, action)=>{
+            state.loading.submitAttendance = false,
+            state.submitAttendanceInfo = action.payload
+        })
+        .addCase(submitAttendance.rejected, (state, action)=>{
+            state.loading.submitAttendance = false,
+            state.error.submitAttendance = action.payload
+        })
 
     }
 })
@@ -93,7 +166,12 @@ const teacherSlice = createSlice({
 export const {
     clearTeacherInfoError,
     clearTeacherInfo,
-    clearAllDepartmentsError
+    clearAllDepartmentsError,
+    clearDepartmenStudentsInfo,
+    clearDepartmentStudentsError,
+    clearSubmitAttendanceError,
+    clearAllDepartmentsInfo,
+    clearSubmitAttendanceInfo
 } = teacherSlice.actions
 
 export default teacherSlice.reducer

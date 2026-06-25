@@ -28,18 +28,31 @@ function App() {
           <Route path="/teacher-login" element={<TeacherLogin />} />
 
           {/* <Route path="/teacher-dashboard" element={<TeacherDashboard />} /> */}
-          <Route path="/attendance-page" element={<AttendancePage />} />
+          {/* <Route path="/attendance-page" element={<AttendancePage />} /> */}
 
           <Route
-          path="/teacher-dashboard"
-          element={
-            <TeacherProtectRoute>
-              <TeacherDashboard></TeacherDashboard>
-            </TeacherProtectRoute>
-          }
-          >
+            path="/teacher-dashboard"
+            element={
+              <TeacherProtectRoute>
+                <TeacherDashboard></TeacherDashboard>
+              </TeacherProtectRoute>
+            }
+          ></Route>
 
-          </Route>
+          <Route
+            path="/attendance-page/:departmentName/:graduate/:year"
+            element={
+              <TeacherProtectRoute>
+                <AttendancePage></AttendancePage>
+              </TeacherProtectRoute>
+            }
+          ></Route>
+
+
+
+
+
+
 
           <Route
             path="/admin-dashboard"
@@ -54,8 +67,8 @@ function App() {
             <Route path="add-department" element={<AddDepartment />} />
             <Route path="view-teachers" element={<ViewTeachers />} />
             <Route path="edit-teacher/:id" element={<EditTeacher />} />
-            <Route path="view-departments" element={<ViewDepartments/>}/>
-            <Route path="edit-department/:id" element={<EditDepartment/>}/>
+            <Route path="view-departments" element={<ViewDepartments />} />
+            <Route path="edit-department/:id" element={<EditDepartment />} />
           </Route>
         </Routes>
       </BrowserRouter>
