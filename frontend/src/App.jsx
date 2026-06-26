@@ -16,6 +16,7 @@ import EditTeacher from "./Components/Admin/EditTeacher";
 import ViewDepartments from "./Components/Admin/ViewDepartments";
 import EditDepartment from "./Components/Admin/EditDepartment";
 import TeacherProtectRoute from "./Components/Teacher/TeacherProtectRoute";
+import ViewStudents from "./Components/Teacher/viewStudents";
 
 function App() {
   return (
@@ -47,6 +48,17 @@ function App() {
               </TeacherProtectRoute>
             }
           ></Route>
+
+          
+          <Route
+            path="/view-students"
+            element={
+              <TeacherProtectRoute>
+                <ViewStudents/>
+              </TeacherProtectRoute>
+            }
+          ></Route>
+
 
 
 

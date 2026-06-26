@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   clearDepartmenStudentsInfo,
   clearSubmitAttendanceError,
@@ -109,9 +109,11 @@ export const AttendancePage = () => {
           {departmentName.toUpperCase()} - {graduate} {year} Year
         </p>
         <div className="w-full flex items-center justify-center flex-col px-10">
-          <button className="bg-orange-500 text-white px-4 py-2 text-xs md:text-lg lg:px-6 lg:py-3 rounded-xl my-5 cursor-pointer hover:bg-blue-500">
-            View Students Only
-          </button>
+          <Link to="/view-students">
+            <button className="bg-orange-500 text-white px-4 py-2 text-xs md:text-lg lg:px-6 lg:py-3 rounded-xl my-5 cursor-pointer hover:bg-blue-500">
+              <p>View Students Only</p>
+            </button>
+          </Link>
           <table className="w-full border-collapse border border-gray-300 shadow-md rounded-lg overflow-hidden ">
             <thead className="bg-blue-600 text-white">
               <tr>

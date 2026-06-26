@@ -7,30 +7,41 @@ export const UserRole = () => {
         Students Attendance Management System
       </h1>
       <div className="flex flex-col items-center gap-10">
-        <h3 className="text-xl md:text-2xl lg:text-2xl font-bold">Select Your Role</h3>
+        <h3 className="text-xl md:text-2xl lg:text-2xl font-bold">
+          Select Your Role
+        </h3>
         <div className="text-md  flex flex-col gap-4 md:flex md:flex-row md:gap-5 text-black lg:flex lg:text-xl">
-          <div
+        <Link to="/admin-login">
+           <div
             className="role-div px-4 py-2 text-center bg-white md:px-6 md:py-3 lg:px-6 lg:py-3 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.25)]  hover:-translate-y-2  delay-200 ease-in-out hover:shadow-[0_20px_40px_rgba(0,0,0,0.35)]
-                  transition-all duration-30 "
+                  transition-all duration-300 "
           >
-            <Link to="/admin-login">Admin</Link>
+            <p>Admin</p>
           </div>
-          <div
-            className="role-div px-4 py-2 text-center bg-white md:px-6 md:py-3 lg:px-6 lg:py-3 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.25)] hover:-translate-y-2  delay-200 ease-in-out
-                  hover:shadow-[0_20px_40px_rgba(0,0,0,0.35)]
-                  transition-all duration-300"
+        </Link>
+        <Link to="/Teacher-login">
+           <div
+            className="role-div px-4 py-2 text-center bg-white md:px-6 md:py-3 lg:px-6 lg:py-3 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.25)]  hover:-translate-y-2  delay-200 ease-in-out hover:shadow-[0_20px_40px_rgba(0,0,0,0.35)]
+                  transition-all duration-300 "
           >
-            <Link to="/Teacher-login">Teacher</Link>
+            <p>Teacher</p>
           </div>
-          <div
-            className="role-div px-4 py-2 text-center bg-white md:px-6 md:py-3 lg:px-6 lg:py-3 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.25)] hover:-translate-y-2  delay-200 ease-in-out
-                  hover:shadow-[0_20px_40px_rgba(0,0,0,0.35)]
-                  transition-all duration-300"
+        </Link>
+        <Link to="/Student-login">
+           <div
+            className="role-div px-4 py-2 text-center bg-white md:px-6 md:py-3 lg:px-6 lg:py-3 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.25)]  hover:-translate-y-2  delay-200 ease-in-out hover:shadow-[0_20px_40px_rgba(0,0,0,0.35)]
+                  transition-all duration-300 "
           >
-            <Link to="/Student-login">Student</Link>
+            <p>Student</p>
           </div>
+        </Link>
         </div>
       </div>
     </div>
   );
 };
+
+
+        // <Link to="/Teacher-login">Teacher</Link>
+
+          //  <Link to="/Student-login">Student</Link>
