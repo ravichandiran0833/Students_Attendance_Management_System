@@ -16,7 +16,11 @@ import EditTeacher from "./Components/Admin/EditTeacher";
 import ViewDepartments from "./Components/Admin/ViewDepartments";
 import EditDepartment from "./Components/Admin/EditDepartment";
 import TeacherProtectRoute from "./Components/Teacher/TeacherProtectRoute";
-import ViewStudents from "./Components/Teacher/viewStudents";
+import ViewStudents from "./Components/Teacher/ViewStudents";
+import TeacherHome from "./Components/Teacher/TeacherHome";
+import AddStudent from "./Components/Teacher/AddStudent";
+import AllDepartments from "./Components/Teacher/AllDepartments";
+import EditAttendance from "./Components/Teacher/EditAttendance";
 
 function App() {
   return (
@@ -28,43 +32,28 @@ function App() {
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/teacher-login" element={<TeacherLogin />} />
 
-          {/* <Route path="/teacher-dashboard" element={<TeacherDashboard />} /> */}
-          {/* <Route path="/attendance-page" element={<AttendancePage />} /> */}
+          <Route path="/edit-attendance" element={<EditAttendance/>}/>
 
           <Route
             path="/teacher-dashboard"
             element={
               <TeacherProtectRoute>
-                <TeacherDashboard></TeacherDashboard>
+                <TeacherDashboard />
               </TeacherProtectRoute>
             }
-          ></Route>
-
-          <Route
-            path="/attendance-page/:departmentName/:graduate/:year"
-            element={
-              <TeacherProtectRoute>
-                <AttendancePage></AttendancePage>
-              </TeacherProtectRoute>
-            }
-          ></Route>
-
-          
-          <Route
-            path="/view-students"
-            element={
-              <TeacherProtectRoute>
-                <ViewStudents/>
-              </TeacherProtectRoute>
-            }
-          ></Route>
-
-
-
-
-
-
-
+          >
+            <Route path="" element={<TeacherHome />} />
+            <Route path="add-student" element={<AddStudent />} />
+            <Route path="all-departments/:type" element={<AllDepartments />} />
+            <Route
+              path="attendance-page/:departmentName/:graduate/:year"
+              element={<AttendancePage />}
+            />
+            <Route
+              path="view-students/:departmentName/:graduate/:year"
+              element={<ViewStudents />}
+            />
+          </Route>
 
           <Route
             path="/admin-dashboard"

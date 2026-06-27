@@ -242,3 +242,42 @@ export const submitAttendance = async (req, res) => {
     });
   }
 };
+
+export const viewStudents = async(req, res)=>{
+  try {
+    const { departmentName, graduate, year } = req.body;
+
+    if (!departmentName || !graduate || !year) {
+      return res.status(400).json({
+        success: false,
+        message: "Department Details is Empty",
+      });
+    }
+
+    const sql =
+      "select * from students where department_name = ? and graduate = ? and year = ? order by register_no asc";
+    const [result] = await db
+      .promise()
+      .query(sql, [departmentName, graduate, year]);
+    // console.log("result :",result);
+    if (result.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "Students Data is Empty",
+        viewStudentsData: [],
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      viewStudentsData: result,
+    });
+  } catch (error) {
+    console.log("error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+  
+}

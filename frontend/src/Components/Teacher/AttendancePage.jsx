@@ -30,10 +30,10 @@ export const AttendancePage = () => {
   const departmentStudentsData =
     departmentStudentsInfo?.departmentStudentsData || [];
 
-  console.log("departmentStudentsInfo:", departmentStudentsInfo);
-  console.log("error:", error);
-  console.log("allDepartmentsInfo:", allDepartmentsInfo);
-  console.log("submitAttendanceInfo:", submitAttendanceInfo);
+  // console.log("departmentStudentsInfo:", departmentStudentsInfo);
+  // console.log("error:", error);
+  // console.log("allDepartmentsInfo:", allDepartmentsInfo);
+  // console.log("submitAttendanceInfo:", submitAttendanceInfo);
 
   useEffect(() => {
     dispatch(
@@ -56,7 +56,7 @@ export const AttendancePage = () => {
       });
       dispatch(clearSubmitAttendanceInfo());
       setTimeout(() => {
-        navigate("/teacher-dashboard");
+        navigate("/teacher-dashboard/all-departments");
       }, 2000);
     }
     if (error) {
