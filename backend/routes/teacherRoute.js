@@ -1,5 +1,5 @@
 import express from "express"
-import { allDepartments, departmentStudents, submitAttendance, teacherLogin, viewStudents } from "../controllers/teacherController.js"
+import { allDepartments, departmentStudents, editAttendance, submitAttendance, submitEditAttendance, teacherLogin, viewStudents } from "../controllers/teacherController.js"
 import authenticate from "../middleware/adminAuthentication.js"
 
 const router = express.Router()
@@ -12,5 +12,7 @@ router.get("/allDepartments", allDepartments)
 router.post("/departmentStudents", departmentStudents)
 router.post("/submitAttendance", submitAttendance)
 router.post("/viewStudents",viewStudents)
+router.post("/editAttendance", editAttendance)
+router.patch("/submitEditAttendance", submitEditAttendance)
 
 export default router

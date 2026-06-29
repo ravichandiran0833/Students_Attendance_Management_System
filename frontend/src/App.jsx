@@ -32,7 +32,7 @@ function App() {
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/teacher-login" element={<TeacherLogin />} />
 
-          <Route path="/edit-attendance" element={<EditAttendance/>}/>
+          
 
           <Route
             path="/teacher-dashboard"
@@ -46,13 +46,14 @@ function App() {
             <Route path="add-student" element={<AddStudent />} />
             <Route path="all-departments/:type" element={<AllDepartments />} />
             <Route
-              path="attendance-page/:departmentName/:graduate/:year"
+              path="attendance-page/:departmentId/:departmentName/:graduate/:year"
               element={<AttendancePage />}
             />
             <Route
               path="view-students/:departmentName/:graduate/:year"
               element={<ViewStudents />}
             />
+            <Route path="edit-attendance/:departmentId/:departmentName/:graduate/:year" element={<EditAttendance/>}/>
           </Route>
 
           <Route

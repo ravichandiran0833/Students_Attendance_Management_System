@@ -74,6 +74,33 @@ export const viewStudents = createAsyncThunk("teacher/viewStudents", async(data,
     }
 })
 
+export const editAttendance = createAsyncThunk("teacher/editAttendance", async(data, thunkAPI)=>{
+    try {
+        const response = await axios.post(`${backendUrl}/api/auth/teacher/editAttendance`, data, {
+            withCredentials : true
+        })
+        return response.data
+    } catch (error) {
+        console.log("error:",error);
+        return thunkAPI.rejectWithValue(error.response?.data || error.message)
+        
+        
+    }
+})
+
+export const submitEditAttendance = createAsyncThunk("teacher/submitEditAttendance", async(data, thunkApi)=>{
+    try {
+        const response = await axios.patch(`${backendUrl}/api/auth/teacher/submitEditAttendance`, data, {
+            withCredentials : true
+        })
+        return response.data
+    } catch (error) {
+        console.log("error:",error.response);
+        return thunkApi.rejectWithValue(error.response?.data || error.message)
+        
+    }
+})
+
 const teacherSlice = createSlice({
     name : "teacherSlice",
     teacherInfo : null,
@@ -82,20 +109,26 @@ const teacherSlice = createSlice({
     departmentStudentsInfo : null,
     submitAttendanceInfo : null,
     viewStudentsInfo : null,
+    editAttendanceInfo : null,
+    submitEditAttendanceInfo : null,
     initialState : {
         loading : {
             teacherInfo : false,
             allDepartments : false,
             departmentStudents : false,
             submitAttendance : false,
-            viewStudents : false
+            viewStudents : false,
+            editAttendance : false,
+            submitEditAttendance : false
         },
         error : {
              teacherInfo : null,
              allDepartments : null,
              departmentStudents : null,
              submitAttendance : null,
-             viewStudents : null
+             viewStudents : null,
+             editAttendance : null,
+             submitEditAttendance : null
         }
     },
     reducers : {
@@ -128,7 +161,20 @@ const teacherSlice = createSlice({
         },
         clearViewStudentsError : (state)=>{
             state.error.viewStudents = null
+        },
+        clearEditAttendanceInfo : (state)=>{
+            state.editAttendanceInfo = null
+        },
+        clearEditAttendanceError : (state)=>{
+            state.error.editAttendance = null
+        },
+        clearSubmitEditAttendanceInfo : (state)=>{
+            state.submitEditAttendanceInfo = null
+        },
+        clearSubmitEditAttendanceError : (state)=>{
+            state.error.submitEditAttendance = null
         }
+
 
 
     },
@@ -192,6 +238,28 @@ const teacherSlice = createSlice({
             state.loading.viewStudents = false,
             state.error.viewStudents = action.payload
         })
+        .addCase(editAttendance.pending, (state)=>{
+            state.loading.editAttendance = true
+        })
+        .addCase(editAttendance.fulfilled, (state, action)=>{
+            state.loading.editAttendance = false,
+            state.editAttendanceInfo = action.payload
+        })
+        .addCase(editAttendance.rejected, (state, action)=>{
+            state.loading.editAttendance = false,
+            state.error.editAttendance = action.payload
+        })
+        .addCase(submitEditAttendance.pending, (state)=>{
+            state.loading.submitEditAttendance = true
+        })
+        .addCase(submitEditAttendance.fulfilled, (state, action)=>{
+            state.loading.submitEditAttendance = false,
+            state.submitEditAttendanceInfo = action.payload
+        })
+        .addCase(submitEditAttendance.rejected, (state, action)=>{
+            state.loading.submitEditAttendance = false,
+            state.error.submitEditAttendance = action.payload
+        })
 
     }
 })
@@ -206,7 +274,11 @@ export const {
     clearAllDepartmentsInfo,
     clearSubmitAttendanceInfo,
     clearViewStudentsInfo,
-    clearViewStudentsError
+    clearViewStudentsError,
+    clearEditAttendanceInfo,
+    clearEditAttendanceError,
+    clearSubmitEditAttendanceInfo,
+    clearSubmitEditAttendanceError
 } = teacherSlice.actions
 
 export default teacherSlice.reducer

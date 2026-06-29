@@ -125,27 +125,6 @@ export const allDepartments = async (req, res) => {
   }
 };
 
-// db.query(sql, (err, result)=>{
-//   if(err){
-//     console.log("err:",err);
-
-//     return res.status(500).json({
-//       success : false,
-//       message : "Database Error"
-//     })
-//   }
-//   if(result.length === 0){
-//     return res.status(400).json({
-//       success : false,
-//       message : "Departments is Empty"
-//     })
-//   }
-//   return res.status(200).json({
-//     success : true,
-//     allDepartmentsData : result
-//   })
-// })
-
 export const departmentStudents = async (req, res) => {
   // console.log("req.body:",req.body);
 
@@ -194,7 +173,8 @@ export const submitAttendance = async (req, res) => {
     console.log(attendanceData);
     for (const student of attendanceData) {
       console.log("student:", student);
-      const { studentId, registerNo, status, attendanceDate } = student;
+      const { studentId, registerNo, status, attendanceDate, departmentId } =
+        student;
 
       const checkSql =
         "select id from attendance where register_no =? and attendance_date=?";
@@ -212,13 +192,20 @@ export const submitAttendance = async (req, res) => {
       student_id,
       register_no,
       attendance_date,
-      status
+      status,
+      department_id
       )
-      values(?,?,?,?)
+      values(?,?,?,?,?)
       `;
       const [result] = await db
         .promise()
-        .query(insertSql, [studentId, registerNo, attendanceDate, status]);
+        .query(insertSql, [
+          studentId,
+          registerNo,
+          attendanceDate,
+          status,
+          departmentId,
+        ]);
 
       console.log("result :", result);
     }
@@ -243,7 +230,7 @@ export const submitAttendance = async (req, res) => {
   }
 };
 
-export const viewStudents = async(req, res)=>{
+export const viewStudents = async (req, res) => {
   try {
     const { departmentName, graduate, year } = req.body;
 
@@ -279,5 +266,88 @@ export const viewStudents = async(req, res)=>{
       message: "Server Error",
     });
   }
+};
+
+export const editAttendance = async (req, res) => {
+  // console.log("edit attendance body : ", req.body);
+  try {
+    const { departmentId, departmentName, graduate, year, attendanceDate } =
+      req.body;
+    const sql = `SELECT
+    a.id,
+    a.student_id,
+    s.register_no,
+    s.student_name,
+    a.status,
+    DATE_FORMAT(a.attendance_date,'%Y-%m-%d') AS attendance_date
+FROM attendance a
+JOIN students s
+    ON a.student_id = s.id
+WHERE a.department_id = ?
+AND s.graduate = ?
+AND s.year = ?
+AND a.attendance_date = ? `;
+    const [result] = await db.promise().query(sql, [departmentId, graduate, year, attendanceDate]);
+
+    if(result.length === 0){
+      return res.status(200).json({
+        success : true,
+        message : "Students Data is Empty",
+        editAttendanceData : []
+      })
+    }
+
+    return res.status(200).json({
+      success : true,
+      editAttendanceData : result
+    })
+  } catch (error) {
+    console.log("error:", error);
+    return res.status(500).json({
+      success : false,
+      message : "Server Error"
+
+    })
+  }
+};
+
+
+export const submitEditAttendance = async(req, res)=>{
+  console.log("submitEditAttendance : ",req.body);
   
+  try {
+    const editAttendanceData = Object.values(req.body)
+    for (const student of editAttendanceData){
+      const {
+        studentId, registerNo, status, attendanceDate
+      } = student
+
+      const  sql = `update  attendance
+      set status = ? where student_id = ? and register_no = ? and attendance_date = ?
+      `
+      const [result] = await db.promise().query(sql, [status, studentId, registerNo, attendanceDate])
+      
+      if(result.affectedRows === 0){
+        return res.status(400).json({
+          success : false,
+          message : "Failed to Edit Attendance"
+        })
+      }
+
+     
+    }
+
+     return res.status(200).json({
+        success : true,
+        message : "Attendance Edited Successfully"
+      })
+  } catch (error) {
+    console.log("error : ",error);
+    return res.status(500).json({
+      success : false,
+      message : "Server Error"
+    })
+    
+  }
 }
+

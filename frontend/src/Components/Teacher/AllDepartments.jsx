@@ -13,9 +13,11 @@ const AllDepartments = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const {type} = useParams()
-  console.log("type:",type);
-  
+  const teacherSlice = useSelector((state) => state.teacher);
+  console.log("teacherSlice :", teacherSlice);
+
+  const { type } = useParams();
+  // console.log("type:", type);
 
   const {
     allDepartmentsInfo,
@@ -23,10 +25,10 @@ const AllDepartments = () => {
     departmentStudentsInfo,
     submitAttendanceInfo,
   } = useSelector((state) => state.teacher);
-  console.log("error:", error);
-  console.log("allDepartmentsInfo:", allDepartmentsInfo);
-  console.log("departmentStudentsInfo:", departmentStudentsInfo);
-  console.log("submitAttendanceInfo:", submitAttendanceInfo);
+  // console.log("error:", error);
+  // console.log("allDepartmentsInfo:", allDepartmentsInfo);
+  // console.log("departmentStudentsInfo:", departmentStudentsInfo);
+  // console.log("submitAttendanceInfo:", submitAttendanceInfo);
 
   const departmentsData = allDepartmentsInfo?.allDepartmentsData;
 
@@ -59,16 +61,23 @@ const AllDepartments = () => {
     return classes;
   };
 
-  const getSingleDepartment = (departmentName, className) => {
-    console.log("departmentName:", departmentName);
-    console.log("className:", className);
-    if(type === "attendance-page"){
-          navigate(
-      `/teacher-dashboard/attendance-page/${departmentName}/${className.graduate}/${className.year}`,
-    );
+  const getSingleDepartment = (department, className) => {
+    // console.log("departmentName:", department.department_name);
+    // console.log("className:", className);
+    if (type === "attendance-page") {
+      navigate(
+        `/teacher-dashboard/attendance-page/${department.id}/${department.department_name}/${className.graduate}/${className.year}`,
+      );
     }
-    if(type === "view-students"){
-      navigate(`/teacher-dashboard/view-students/${departmentName}/${className.graduate}/${className.year}`)
+    if (type === "view-students") {
+      navigate(
+        `/teacher-dashboard/view-students/${department.department_name}/${className.graduate}/${className.year}`,
+      );
+    }
+    if (type === "edit-attendance") {
+      navigate(
+        `/teacher-dashboard/edit-attendance/${department.id}/${department.department_name}/${className.graduate}/${className.year}`,
+      );
     }
   };
 
@@ -93,10 +102,8 @@ const AllDepartments = () => {
                     <div
                       key={index}
                       className="animate-flower mt-10 bg-white px-6 py-3 rounded font-bold cursor-pointer hover:bg-gray-500 hover:text-white animate-card transition delay-150 duration-500 ease-in-out hover:-translate-y-1 hover:scale-110"
-                       style={{ animationDelay: `${index * 300}ms` }}
-                      onClick={() =>
-                        getSingleDepartment(department.department_name, item)
-                      }
+                      style={{ animationDelay: `${index * 300}ms` }}
+                      onClick={() => getSingleDepartment(department, item)}
                     >
                       <p>
                         {item.graduate} - {item.year} Year

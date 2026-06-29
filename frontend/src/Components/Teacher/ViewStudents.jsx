@@ -9,6 +9,9 @@ import {
 import  { toast }  from "react-toastify" 
 const ViewStudents = () => {
 
+    const teacherSlice = useSelector((state)=>state.teacher)
+    console.log("teacherSlice :",teacherSlice);
+
 
   const [search, setSearch] = useState("")
   
@@ -21,7 +24,7 @@ const ViewStudents = () => {
 
   const studentsData = viewStudentsInfo?.viewStudentsData || [];
 
-  console.log("studentsData :",studentsData);
+  // console.log("studentsData :",studentsData);
   
 
   useEffect(() => {

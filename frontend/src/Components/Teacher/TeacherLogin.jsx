@@ -2,39 +2,36 @@ import React, { useEffect, useState } from "react";
 import { MdOutlineEmail } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
-import { clearTeacherInfo, clearTeacherInfoError, teacherLogin } from "../../redux/slices/teacherSlice";
-import { useNavigate } from "react-router-dom"
+import {
+  clearTeacherInfo,
+  clearTeacherInfoError,
+  teacherLogin,
+} from "../../redux/slices/teacherSlice";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 export const TeacherLogin = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+  const { teacherInfo, loading, error } = useSelector((state) => state.teacher);
+  // console.log("teacherInfo:",teacherInfo);
+  // console.log("error:",error);
 
-    const {teacherInfo, loading, error} = useSelector((state)=>state.teacher)
-    console.log("teacherInfo:",teacherInfo);
-    console.log("error:",error);
-
-   
-
-    
-
-    useEffect(()=>{
-      if(teacherInfo?.success){
-        navigate("/teacher-dashboard")
-        toast.success(teacherInfo.message,{
-          autoClose : 2000
-        })
-        dispatch(clearTeacherInfo())
-      }
-      if(error){
-        toast.error(error.teacherInfo?.message,{
-          autoClose : 2000
-        })
-        dispatch(clearTeacherInfoError())
-      }
-    },[teacherInfo, error, navigate,dispatch])
-    
-    
+  useEffect(() => {
+    if (teacherInfo?.success) {
+      navigate("/teacher-dashboard");
+      toast.success(teacherInfo.message, {
+        autoClose: 2000,
+      });
+      dispatch(clearTeacherInfo());
+    }
+    if (error) {
+      toast.error(error.teacherInfo?.message, {
+        autoClose: 2000,
+      });
+      dispatch(clearTeacherInfoError());
+    }
+  }, [teacherInfo, error, navigate, dispatch]);
 
   const [teacherData, setteacherData] = useState({
     email: "",
@@ -52,8 +49,7 @@ export const TeacherLogin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(teacherLogin(teacherData))
-    
+    dispatch(teacherLogin(teacherData));
   };
   return (
     <div className="admin-login-container h-screen w-screen lg:flex flex-col items-center md:pt-20 pt-10">

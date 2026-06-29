@@ -13,7 +13,10 @@ import { toast } from "react-toastify";
 export const AttendancePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { departmentName, graduate, year } = useParams();
+  const { departmentId, departmentName, graduate, year } = useParams();
+
+  const teacherSlice = useSelector((state) => state.teacher);
+  console.log("teacherSlice :", teacherSlice);
 
   const {
     departmentStudentsInfo,
@@ -56,7 +59,7 @@ export const AttendancePage = () => {
       });
       dispatch(clearSubmitAttendanceInfo());
       setTimeout(() => {
-        navigate("/teacher-dashboard/all-departments");
+        navigate("/teacher-dashboard/all-departments/attendance-page");
       }, 2000);
     }
     if (error) {
@@ -77,6 +80,7 @@ export const AttendancePage = () => {
         registerNo: student.register_no,
         status: status,
         attendanceDate: new Date().toISOString().split("T")[0],
+        departmentId: departmentId,
       },
     }));
   };

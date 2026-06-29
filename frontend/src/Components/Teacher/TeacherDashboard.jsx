@@ -1,7 +1,10 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 import { Link, Outlet } from "react-router-dom";
 export const TeacherDashboard = () => {
+  const teacherSlice = useSelector((state) => state.teacher);
+  console.log("teacherSlice :", teacherSlice);
   return (
     <>
       <div className="min-h-screen w-full h-auto flex">
@@ -29,7 +32,7 @@ export const TeacherDashboard = () => {
             </li>
             <hr className="border w-full border-gray-400" />
             <li className="px-2 hover:bg-gray-500 py-1">
-              <Link to="/teacher-dashboard/all-departments">
+              <Link to="/teacher-dashboard/all-departments/edit-attendance">
                 Edit Attendance
               </Link>
             </li>
