@@ -79,6 +79,11 @@ const AllDepartments = () => {
         `/teacher-dashboard/edit-attendance/${department.id}/${department.department_name}/${className.graduate}/${className.year}`,
       );
     }
+        if (type === "add-student") {
+      navigate(
+        `/teacher-dashboard/add-student/${department.id}/${department.department_name}/${className.graduate}/${className.year}`,
+      );
+    }
   };
 
   return (

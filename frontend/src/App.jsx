@@ -43,7 +43,7 @@ function App() {
             }
           >
             <Route path="" element={<TeacherHome />} />
-            <Route path="add-student" element={<AddStudent />} />
+            {/* <Route path="add-student" element={<AddStudent />} /> */}
             <Route path="all-departments/:type" element={<AllDepartments />} />
             <Route
               path="attendance-page/:departmentId/:departmentName/:graduate/:year"
@@ -54,7 +54,10 @@ function App() {
               element={<ViewStudents />}
             />
             <Route path="edit-attendance/:departmentId/:departmentName/:graduate/:year" element={<EditAttendance/>}/>
+            <Route path="add-student/:departmentId/:departmentName/:graduate/:year" element={<AddStudent/>}/>
           </Route>
+
+
 
           <Route
             path="/admin-dashboard"

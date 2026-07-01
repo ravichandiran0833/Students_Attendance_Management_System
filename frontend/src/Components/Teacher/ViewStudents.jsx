@@ -70,12 +70,12 @@ const ViewStudents = () => {
           </div>
 
           <div className="w-full flex flex-col justify-center items-center">
-            <div className=" w-full md:w-2xl lg:w-4xl">
+            <div className="w-full md:w-2xl lg:w-4xl">
               <input
                 type="text"
                 placeholder="search"
                 onChange={(e) => setSearch(e.target.value)}
-                className="border border-gray-400 outline-none rounded px-4 w-full py-1 md:p-2"
+                className="border border-gray-400 outline-none rounded px-3 w-full py-1 "
               ></input>
             </div>
             <table className="border-collapse border border-gray-300 shadow-md rounded-lg overflow-hidden md:w-2xl lg:w-4xl">

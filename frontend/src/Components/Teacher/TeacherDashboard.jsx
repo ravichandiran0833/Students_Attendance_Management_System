@@ -16,7 +16,7 @@ export const TeacherDashboard = () => {
             </li>
             <hr className="border w-full border-gray-400" />
             <li className="px-2 hover:bg-gray-500 py-1">
-              <Link to="/teacher-dashboard/all-departments/">Add Student</Link>
+              <Link to="/teacher-dashboard/all-departments/add-student">Add Student</Link>
             </li>
             <hr className="border w-full border-gray-400" />
             <li className="px-2 hover:bg-gray-500 py-1">

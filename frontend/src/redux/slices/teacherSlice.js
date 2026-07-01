@@ -101,6 +101,19 @@ export const submitEditAttendance = createAsyncThunk("teacher/submitEditAttendan
     }
 })
 
+export const addStudent = createAsyncThunk("teacher/addStudent",async(studentData, thunkAPI)=>{
+    try {
+        const response = await axios.post(`${backendUrl}/api/auth/teacher/addStudent`,studentData,{
+            withCredentials : true
+        })
+        return response.data
+    } catch (error) {
+        console.log("error:",error.response);
+        return thunkAPI.rejectWithValue(error.response?.data || error.message)
+        
+    }
+})
+
 const teacherSlice = createSlice({
     name : "teacherSlice",
     teacherInfo : null,
@@ -111,6 +124,7 @@ const teacherSlice = createSlice({
     viewStudentsInfo : null,
     editAttendanceInfo : null,
     submitEditAttendanceInfo : null,
+    addStudentInfo : null,
     initialState : {
         loading : {
             teacherInfo : false,
@@ -119,7 +133,8 @@ const teacherSlice = createSlice({
             submitAttendance : false,
             viewStudents : false,
             editAttendance : false,
-            submitEditAttendance : false
+            submitEditAttendance : false,
+            addStudent : false
         },
         error : {
              teacherInfo : null,
@@ -128,7 +143,9 @@ const teacherSlice = createSlice({
              submitAttendance : null,
              viewStudents : null,
              editAttendance : null,
-             submitEditAttendance : null
+             submitEditAttendance : null,
+             addStudent : null
+
         }
     },
     reducers : {
@@ -173,7 +190,14 @@ const teacherSlice = createSlice({
         },
         clearSubmitEditAttendanceError : (state)=>{
             state.error.submitEditAttendance = null
+        },
+        clearAddStudentInfo : (state)=>{
+            state.addStudentInfo = null
+        },
+        clearAddStudentError : (state)=>{
+             state.error.addStudent = null
         }
+
 
 
 
@@ -260,6 +284,17 @@ const teacherSlice = createSlice({
             state.loading.submitEditAttendance = false,
             state.error.submitEditAttendance = action.payload
         })
+        .addCase(addStudent.pending, (state)=>{
+            state.loading.addStudent = true
+        })
+        .addCase(addStudent.fulfilled, (state, action)=>{
+            state.loading.addStudent = false
+            state.addStudentInfo = action.payload
+        })
+        .addCase(addStudent.rejected, (state, action)=>{
+            state.loading.addStudent = false,
+            state.error.addStudent = action.payload
+        })
 
     }
 })
@@ -278,7 +313,9 @@ export const {
     clearEditAttendanceInfo,
     clearEditAttendanceError,
     clearSubmitEditAttendanceInfo,
-    clearSubmitEditAttendanceError
+    clearSubmitEditAttendanceError,
+    clearAddStudentInfo,
+    clearAddStudentError
 } = teacherSlice.actions
 
 export default teacherSlice.reducer
