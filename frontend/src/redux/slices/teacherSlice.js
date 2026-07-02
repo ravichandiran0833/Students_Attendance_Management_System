@@ -114,6 +114,32 @@ export const addStudent = createAsyncThunk("teacher/addStudent",async(studentDat
     }
 })
 
+export const getSingleStudent = createAsyncThunk("teacher/getSingleStudent", async(registerNo, thunkAPI)=>{
+    try {
+        const response = await axios.get(`${backendUrl}/api/auth/teacher/getSingleStudent/${registerNo}`, {
+            withCredentials : true
+        })
+        return response.data
+    } catch (error) {
+        console.log("error:",error.response);
+        return thunkAPI.rejectWithValue(error.response?.data || error.message)
+        
+    }
+})
+
+export const editStudent = createAsyncThunk("teacher/editStudent", async({id, formData :StudentData}, thunkAPI)=>{
+    try {
+        const response = await axios.patch(`${backendUrl}/api/auth/teacher/editStudent/${id}`, StudentData,{
+            withCredentials : true
+        })
+        return response.data
+    } catch (error) {
+        console.log("error:",error);
+        thunkAPI.rejectWithValue(error.response?.data || error.message)
+        
+    }
+})
+
 const teacherSlice = createSlice({
     name : "teacherSlice",
     teacherInfo : null,
@@ -125,6 +151,8 @@ const teacherSlice = createSlice({
     editAttendanceInfo : null,
     submitEditAttendanceInfo : null,
     addStudentInfo : null,
+    getSingleStudentInfo : null,
+    editStudentInfo : null,
     initialState : {
         loading : {
             teacherInfo : false,
@@ -134,7 +162,9 @@ const teacherSlice = createSlice({
             viewStudents : false,
             editAttendance : false,
             submitEditAttendance : false,
-            addStudent : false
+            addStudent : false,
+            getSingleStudent : false,
+            editStudent : false
         },
         error : {
              teacherInfo : null,
@@ -144,7 +174,9 @@ const teacherSlice = createSlice({
              viewStudents : null,
              editAttendance : null,
              submitEditAttendance : null,
-             addStudent : null
+             addStudent : null,
+             getSingleStudent : null,
+             editStudent : null
 
         }
     },
@@ -196,6 +228,18 @@ const teacherSlice = createSlice({
         },
         clearAddStudentError : (state)=>{
              state.error.addStudent = null
+        },
+        clearSingleStudentInfo : (state)=>{
+            state.getSingleStudentInfo = null
+        },
+        clearSingleStudentError : (state)=>{
+            state.error.getSingleStudent = null
+        },
+        clearEditStudentInfo : (state)=>{
+            state.editStudentInfo = null
+        },
+        clearEditStudentError : (state)=>{
+            state.error.editStudent = null
         }
 
 
@@ -295,6 +339,28 @@ const teacherSlice = createSlice({
             state.loading.addStudent = false,
             state.error.addStudent = action.payload
         })
+        .addCase(getSingleStudent.pending, (state)=>{
+            state.loading.getSingleStudent = true
+        })
+        .addCase(getSingleStudent.fulfilled, (state, action)=>{
+            state.loading.getSingleStudent = false,
+            state.getSingleStudentInfo = action.payload
+        })
+        .addCase(getSingleStudent.rejected, (state, action)=>{
+            state.loading.getSingleStudent = false,
+            state.error.getSingleStudent = action.payload
+        })
+        .addCase(editStudent.pending, (state)=>{
+            state.loading.editStudent = true
+        })
+        .addCase(editStudent.fulfilled, (state, action)=>{
+            state.loading.editStudent = false,
+            state.editStudentInfo = action.payload
+        })
+        .addCase(editStudent.rejected, (state, action)=>{
+            state.loading.editStudent = false,
+            state.error.editStudent = action.payload
+        })
 
     }
 })
@@ -315,7 +381,11 @@ export const {
     clearSubmitEditAttendanceInfo,
     clearSubmitEditAttendanceError,
     clearAddStudentInfo,
-    clearAddStudentError
+    clearAddStudentError,
+    clearSingleStudentInfo,
+    clearSingleStudentError,
+    clearEditStudentInfo,
+    clearEditStudentError
 } = teacherSlice.actions
 
 export default teacherSlice.reducer

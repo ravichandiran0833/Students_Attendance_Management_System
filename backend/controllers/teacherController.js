@@ -370,8 +370,6 @@ export const addStudent = async (req, res) => {
       year,
     } = req.body;
 
-    
-
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -387,21 +385,19 @@ export const addStudent = async (req, res) => {
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!emailRegex.test(email)){
+    if (!emailRegex.test(email)) {
       return res.status(400).json({
-        success : false,
-        message : "Invalid Email"
-      })
+        success: false,
+        message: "Invalid Email",
+      });
     }
 
-    if(password.length <8){
+    if (password.length < 8) {
       return res.status(400).json({
-        success : false, 
-        message : "Password must be 8 digit"
-      })
+        success: false,
+        message: "Password must be 8 digit",
+      });
     }
-
-    
 
     const checkSql = "select id from students where register_no = ?";
     const [existingStudentResult] = await db
@@ -470,6 +466,161 @@ export const addStudent = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Failed to Add Student",
+    });
+  }
+};
+
+export const getSingleStudent = async (req, res) => {
+  try {
+    const { registerNo } = req.params;
+    const sql = "select * from students where register_no = ?";
+    const [result] = await db.promise().query(sql, registerNo);
+
+    if (result.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: `${registerNo} Student Data Not Availabe in Database`,
+        singleStudentData: [],
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      singleStudentData: result[0],
+    });
+  } catch (error) {
+    console.log("error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
+
+export const editStudent = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const {
+      registerNo,
+      name,
+      email,
+      gender,
+      phoneNumber,
+      password,
+    } = req.body;
+
+   
+    const sql =
+      "SELECT profile_image, password FROM students WHERE id = ?";
+
+    const [student] = await db.promise().query(sql, [id]);
+
+    if (student.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
+    }
+
+    let profileData = student[0].profile_image;
+    let studentPassword = student[0].password;
+
+  
+    if (req.file) {
+      const oldProfile = student[0].profile_image;
+
+      const uploadResult =
+        await cloudinary.uploader.upload(req.file.path, {
+          folder: "student",
+        });
+
+      profileData = uploadResult.secure_url;
+
+   
+      if (fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+      }
+
+
+      if (oldProfile) {
+        try {
+          const parts = oldProfile.split("/");
+          const file = parts.pop();
+          const folder = parts.pop();
+
+          const publicId =
+            `${folder}/${file.split(".")[0]}`;
+
+          await cloudinary.uploader.destroy(publicId);
+
+          console.log(
+            "Old Cloudinary image deleted"
+          );
+        } catch (err) {
+          console.log(
+            "Cloudinary delete error:",
+            err
+          );
+        }
+      }
+    }
+
+  
+    if (password && password.trim() !== "") {
+      studentPassword =
+        await bcrypt.hash(password, 10);
+    }
+
+    const updateSql = `
+      UPDATE students
+      SET
+        register_no = ?,
+        student_name = ?,
+        gender = ?,
+        email = ?,
+        phone = ?,
+        profile_image = ?,
+        password = ?
+      WHERE id = ?
+    `;
+
+    const [result] =
+      await db.promise().query(updateSql, [
+        registerNo,
+        name,
+        gender,
+        email,
+        phoneNumber,
+        profileData,
+        studentPassword,
+        id,
+      ]);
+
+    if(result.affectedRows ===0){
+      return res.status(400).json({
+        success : false,
+        message : "Failed to Update Student"
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Student updated successfully",
+    });
+  } catch (error) {
+    console.log("Edit student error:", error);
+
+    if (
+      req.file?.path &&
+      fs.existsSync(req.file.path)
+    ) {
+      fs.unlinkSync(req.file.path);
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
     });
   }
 };

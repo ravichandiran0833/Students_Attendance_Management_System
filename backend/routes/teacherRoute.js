@@ -1,5 +1,5 @@
 import express from "express"
-import { addStudent, allDepartments, departmentStudents, editAttendance, submitAttendance, submitEditAttendance, teacherLogin, viewStudents } from "../controllers/teacherController.js"
+import { addStudent, allDepartments, departmentStudents, editAttendance, editStudent, getSingleStudent, submitAttendance, submitEditAttendance, teacherLogin, viewStudents } from "../controllers/teacherController.js"
 import authenticate from "../middleware/adminAuthentication.js"
 import { uploadImage } from "../middleware/uploadImage.js"
 
@@ -17,5 +17,7 @@ router.post("/editAttendance", editAttendance)
 router.patch("/submitEditAttendance", submitEditAttendance)
 
 router.post("/addStudent",uploadImage, addStudent)
+router.get("/getSingleStudent/:registerNo", getSingleStudent)
+router.patch("/editStudent/:id",uploadImage, editStudent)
 
 export default router

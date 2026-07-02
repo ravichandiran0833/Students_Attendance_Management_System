@@ -21,6 +21,7 @@ import TeacherHome from "./Components/Teacher/TeacherHome";
 import AddStudent from "./Components/Teacher/AddStudent";
 import AllDepartments from "./Components/Teacher/AllDepartments";
 import EditAttendance from "./Components/Teacher/EditAttendance";
+import EditStudent from "./Components/Teacher/EditStudent";
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
             />
             <Route path="edit-attendance/:departmentId/:departmentName/:graduate/:year" element={<EditAttendance/>}/>
             <Route path="add-student/:departmentId/:departmentName/:graduate/:year" element={<AddStudent/>}/>
+            <Route path="edit-student/:registerNum" element={<EditStudent/>}/>
           </Route>
 
 

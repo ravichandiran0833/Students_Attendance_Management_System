@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearViewStudentsError,
   clearViewStudentsInfo,
   viewStudents,
 } from "../../redux/slices/teacherSlice";
-import  { toast }  from "react-toastify" 
+import { toast } from "react-toastify";
+import Loading from "../Loading";
 const ViewStudents = () => {
+  const teacherSlice = useSelector((state) => state.teacher);
+  console.log("teacherSlice :", teacherSlice);
 
-    const teacherSlice = useSelector((state)=>state.teacher)
-    console.log("teacherSlice :",teacherSlice);
+  const [search, setSearch] = useState("");
 
-
-  const [search, setSearch] = useState("")
-  
   const { departmentName, graduate, year } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { viewStudentsInfo, error, loading } = useSelector(
     (state) => state.teacher,
@@ -25,7 +25,6 @@ const ViewStudents = () => {
   const studentsData = viewStudentsInfo?.viewStudentsData || [];
 
   // console.log("studentsData :",studentsData);
-  
 
   useEffect(() => {
     dispatch(viewStudents({ departmentName, graduate, year }));
@@ -35,37 +34,49 @@ const ViewStudents = () => {
     };
   }, [departmentName, graduate, year, dispatch]);
 
-  useEffect(()=>{
-    if(viewStudentsInfo?.success){
-      toast.success(viewStudentsInfo?.message,{
-        autoClose : 2000
-      })
+  useEffect(() => {
+    if (viewStudentsInfo?.success) {
+      toast.success(viewStudentsInfo?.message, {
+        autoClose: 2000,
+      });
     }
-    if(error){
+    if (error) {
       toast.error(error.viewStudents?.message, {
-        autoClose : 2000
-      })
-      dispatch(clearViewStudentsError())
+        autoClose: 2000,
+      });
+      dispatch(clearViewStudentsError());
     }
-  },[viewStudentsInfo, error, dispatch])
+  }, [viewStudentsInfo, error, dispatch]);
 
   const filteredStudents =
-    search === "" ?
-    studentsData :
-    studentsData.filter((student)=>student.student_name.toLowerCase().includes(search.toLocaleLowerCase()))
+    search === ""
+      ? studentsData
+      : studentsData.filter((student) =>
+          student.student_name
+            .toLowerCase()
+            .includes(search.toLocaleLowerCase()),
+        );
+
+  const handleEditStudent = (registerNo) => {
+    navigate(`/teacher-dashboard/edit-student/${registerNo}`);
+  };
 
   return (
     <>
       <div className="relative w-full min-h-screen">
-        {/* {loading.getAllDepartments || loading.deleteDepartment && (
+        {loading.viewStudents && (
           <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/20">
             <Loading />
           </div>
-        )} */}
+        )}
         <div
           className={`w-full flex flex-col items-center py-15 gap-10 transition-opacity duration-300 `}
         >
-          <div>
+          <div className="flex flex-col justify-center items-center gap-3">
+            
+            <p className="text-xl font-bold md:text-2xl">
+              {departmentName.toUpperCase()} - {graduate} {year} Year
+            </p>
             <h1 className="text-xl font-bold md:text-2xl">Students List</h1>
           </div>
 
@@ -107,7 +118,7 @@ const ViewStudents = () => {
                       <div className="text-xs flex gap-2 md:gap-4 justify-center items-center md:text-lg">
                         <button
                           className="bg-green-500 text-white px-2 py-1 rounded border-none outline-none cursor-pointer"
-                          // onClick={() => handleEditDepartment(department.id)}
+                          onClick={() => handleEditStudent(student.register_no)}
                         >
                           Edit
                         </button>
@@ -145,4 +156,3 @@ const ViewStudents = () => {
 export default ViewStudents;
 
 // ${loading.getAllDepartments || loading.deleteDepartment ? "opacity-50 pointer-events-none" : "opacity-100"}
-
