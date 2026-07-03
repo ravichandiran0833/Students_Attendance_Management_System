@@ -76,7 +76,7 @@ const EditStudent = () => {
         dispatch(clearEditStudentError())
     }
 
-  }, [studentData, error, dispatch, editStudentInfo]);
+  }, [studentData, error, dispatch, editStudentInfo, navigate]);
 
   useEffect(() => {
     dispatch(getSingleStudent(registerNum));
@@ -117,7 +117,7 @@ const EditStudent = () => {
             Edit Student
           </h1>
 
-          <div className="w-auto md:w-xl lg:w-full lg:max-w-2xl bg-transparent shadow-[0_0_5px_whitesmoke] lg:shadow-[0_0_20px_whitesmoke] border border-gray-300 rounded">
+          <div className="w-65 md:w-xl lg:w-full lg:max-w-2xl bg-transparent shadow-[0_0_5px_whitesmoke] lg:shadow-[0_0_20px_whitesmoke] border border-gray-300 rounded">
             <form
               className="flex flex-col gap-3 lg:gap-6 p-4 md:p-8 text-white"
               onSubmit={handleSubmit}
@@ -169,15 +169,16 @@ const EditStudent = () => {
                 />
               </div>
 
-              <div className="flex   md:gap-2 my-4">
+              <div className="flex flex-col md:flex-row md:gap-4">
                 <label className="md:w-40">Gender</label>
-                <input
+                <div className="flex  md:flex-none">
+                                  <input
                   type="radio"
                   name="gender"
                   required
                   value={"Male"}
                   checked={gender == "Male"}
-                  className="ml-4 flex justify-center items-center"
+
                   onChange={(e) => setGender(e.target.value)}
                 />
                 Male
@@ -201,6 +202,7 @@ const EditStudent = () => {
                   onChange={(e) => setGender(e.target.value)}
                 />
                 Others
+                </div>
               </div>
               <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
                 <label className="md:w-40">Phone Number</label>

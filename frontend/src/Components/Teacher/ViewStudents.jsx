@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  clearDeleteStudentError,
+  clearDeleteStudentInfo,
   clearViewStudentsError,
   clearViewStudentsInfo,
+  deleteStudent,
   viewStudents,
 } from "../../redux/slices/teacherSlice";
 import { toast } from "react-toastify";
@@ -18,7 +21,7 @@ const ViewStudents = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { viewStudentsInfo, error, loading } = useSelector(
+  const { viewStudentsInfo, error, loading , deleteStudentInfo} = useSelector(
     (state) => state.teacher,
   );
 
@@ -40,13 +43,28 @@ const ViewStudents = () => {
         autoClose: 2000,
       });
     }
-    if (error) {
+    if (error.viewStudents) {
       toast.error(error.viewStudents?.message, {
         autoClose: 2000,
       });
       dispatch(clearViewStudentsError());
     }
-  }, [viewStudentsInfo, error, dispatch]);
+    if(deleteStudentInfo?.success){
+      toast.success(deleteStudentInfo?.message,
+        {
+          autoClose : 2000
+        }
+      )
+      dispatch(clearDeleteStudentInfo())
+      dispatch(viewStudents({ departmentName, graduate, year }))
+    }
+    if(error.deleteStudent){
+      toast.error(error.deleteStudent?.message, {
+        autoClose : 2000
+      })
+      dispatch(clearDeleteStudentError())
+    }
+  }, [viewStudentsInfo, error, dispatch, deleteStudentInfo]);
 
   const filteredStudents =
     search === ""
@@ -61,16 +79,20 @@ const ViewStudents = () => {
     navigate(`/teacher-dashboard/edit-student/${registerNo}`);
   };
 
+  const handleDeleteStudent =(id)=>{
+    dispatch(deleteStudent(id))
+  }
+
   return (
     <>
       <div className="relative w-full min-h-screen">
-        {loading.viewStudents && (
+        {(loading.deleteStudent || loading.viewStudents) && (
           <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/20">
             <Loading />
           </div>
         )}
         <div
-          className={`w-full flex flex-col items-center py-15 gap-10 transition-opacity duration-300 `}
+          className={`w-full flex flex-col items-center py-15 gap-10 transition-opacity duration-300 ${loading.deleteStudent || loading.viewStudents ? "opacity-50 pointer-events-none" : "opacity-100"}`}
         >
           <div className="flex flex-col justify-center items-center gap-3">
             
@@ -124,7 +146,7 @@ const ViewStudents = () => {
                         </button>
                         <button
                           className="bg-red-500 text-white px-2 py-1 rounded border-none outline-none cursor-pointer"
-                          // onClick={() => handleDeleteDepartment(department.id)}
+                          onClick={() => handleDeleteStudent(student.id)}
                           disabled={loading.viewStudents}
                         >
                           Delete

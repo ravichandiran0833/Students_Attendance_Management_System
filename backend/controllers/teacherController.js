@@ -624,3 +624,71 @@ export const editStudent = async (req, res) => {
     });
   }
 };
+
+
+export const deleteStudent = async(req, res)=>{
+  try {
+    const {id} = req.params
+
+
+    const getProfileUrl = "select profile_image from students where id = ?"
+    const [profileData] = await db.promise().query(getProfileUrl, [id])
+
+       if (!profileData.length) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
+    }
+
+
+    const url = profileData[0]?.profile_image
+    console.log("url :", url);
+    
+
+     if (url) {
+        try {
+          const parts = url.split("/");
+          const file = parts.pop();
+          const folder = parts.pop();
+
+          const publicId =
+            `${folder}/${file.split(".")[0]}`;
+
+          await cloudinary.uploader.destroy(publicId);
+
+          console.log(
+            "Old Cloudinary image deleted"
+          );
+        } catch (err) {
+          console.log(
+            "Cloudinary delete error:",
+            err
+          );
+        }
+      }
+
+
+    const sql = "delete from students where id = ?"
+    const [result] = await db.promise().query(sql, [id])
+
+    if(result.affectedRows === 0){
+      return res.status(400).json({
+        success : false,
+        message : "Failed to Delete Student"
+      })
+    }
+
+    return res.status(200).json({
+      success : true,
+      message : "Student Deleted SuccessFully"
+    })
+  } catch (error) {
+    console.log("error:", error);
+    return res.status(500).json({
+      success : false,
+      message : "Server Error"
+    })
+    
+  }
+}

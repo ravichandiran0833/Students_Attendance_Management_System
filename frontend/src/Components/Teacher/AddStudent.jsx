@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { addStudent, clearAddStudentError, clearAddStudentInfo } from "../../redux/slices/teacherSlice";
+import {
+  addStudent,
+  clearAddStudentError,
+  clearAddStudentInfo,
+} from "../../redux/slices/teacherSlice";
 import { toast } from "react-toastify";
 import Loading from "../Loading";
 
 const AddStudent = () => {
   const { departmentId, departmentName, graduate, year } = useParams();
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { addStudentInfo, error, loading } = useSelector(
     (state) => state.teacher,
@@ -38,21 +42,19 @@ const AddStudent = () => {
   formData.append("graduate", graduate);
   formData.append("year", year);
 
-
-  useEffect(()=>{
-    if(addStudentInfo?.success){
-      toast.success(addStudentInfo?.message,{
-        autoClose : 2000
-      })
-      dispatch(clearAddStudentInfo())
-      navigate("/teacher-dashboard/all-departments/add-student")
-
+  useEffect(() => {
+    if (addStudentInfo?.success) {
+      toast.success(addStudentInfo?.message, {
+        autoClose: 2000,
+      });
+      dispatch(clearAddStudentInfo());
+      navigate("/teacher-dashboard/all-departments/add-student");
     }
-    if(error){
-      toast.error(error.addStudent?.message)
-      dispatch(clearAddStudentError())
+    if (error) {
+      toast.error(error.addStudent?.message);
+      dispatch(clearAddStudentError());
     }
-  },[addStudentInfo, error, dispatch, navigate])
+  }, [addStudentInfo, error, dispatch, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -63,7 +65,7 @@ const AddStudent = () => {
   return (
     <>
       <div className="relative w-full min-h-screen">
-        {loading.addStudent || loading.allDepartments && (
+        {(loading.addStudent || loading.allDepartments) && (
           <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/20">
             <Loading />
           </div>
@@ -75,7 +77,7 @@ const AddStudent = () => {
             Add Student
           </h1>
 
-          <div className="w-auto md:w-xl lg:w-full lg:max-w-2xl bg-transparent shadow-[0_0_5px_whitesmoke] lg:shadow-[0_0_20px_whitesmoke] border border-gray-300 rounded">
+          <div className="w-65 md:w-xl lg:w-full lg:max-w-2xl bg-transparent shadow-[0_0_5px_whitesmoke] lg:shadow-[0_0_20px_whitesmoke] border border-gray-300 rounded">
             <form
               className="flex flex-col gap-3 lg:gap-6 p-4 md:p-8 text-white"
               onSubmit={handleSubmit}
@@ -122,36 +124,39 @@ const AddStudent = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
+              {/* md:gap-2 my-4  md:flex-row */}
 
-              <div className="flex   md:gap-2 my-4">
+              <div className="flex flex-col md:flex-row md:gap-4">
                 <label className="md:w-40">Gender</label>
-                <input
-                  type="radio"
-                  name="gender"
-                  required
-                  value={"male"}
-                  className="ml-4 flex justify-center items-center"
-                  onChange={(e) => setGender(e.target.value)}
-                />
-                Male
-                <input
-                  type="radio"
-                  name="gender"
-                  required
-                  value={"female"}
-                  className="ml-4 flex justify-center items-center"
-                  onChange={(e) => setGender(e.target.value)}
-                />
-                Female
-                <input
-                  type="radio"
-                  name="gender"
-                  required
-                  value={"others"}
-                  className="ml-4 flex justify-center items-center"
-                  onChange={(e) => setGender(e.target.value)}
-                />
-                Others
+                <div className="flex  md:flex-none">
+                  <input
+                    type="radio"
+                    name="gender"
+                    required
+                    value={"male"}
+
+                    onChange={(e) => setGender(e.target.value)}
+                  />
+                  Male
+                  <input
+                    type="radio"
+                    name="gender"
+                    required
+                    value={"female"}
+                    className="ml-4 flex justify-center items-center"
+                    onChange={(e) => setGender(e.target.value)}
+                  />
+                  Female
+                  <input
+                    type="radio"
+                    name="gender"
+                    required
+                    value={"others"}
+                    className="ml-4 flex justify-center items-center"
+                    onChange={(e) => setGender(e.target.value)}
+                  />
+                  Others
+                </div>
               </div>
               <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
                 <label className="md:w-40">Phone Number</label>
@@ -181,7 +186,6 @@ const AddStudent = () => {
                 disabled={loading.addStudent}
               >
                 {loading.addStudent ? "Adding..." : "Add Student"}
-             
               </button>
             </form>
           </div>
@@ -192,5 +196,3 @@ const AddStudent = () => {
 };
 
 export default AddStudent;
-
-

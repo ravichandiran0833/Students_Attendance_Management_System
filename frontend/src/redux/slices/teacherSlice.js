@@ -139,6 +139,20 @@ export const editStudent = createAsyncThunk("teacher/editStudent", async({id, fo
         
     }
 })
+export const deleteStudent = createAsyncThunk("teacher/deleteStudent", async(id,thunkAPI)=>{
+    try {
+        const response = await axios.delete(`${backendUrl}/api/auth/teacher/deleteStudent/${id}`, {
+            withCredentials : true
+        })
+        return response.data
+    } catch (error) {
+        console.log("error:", error.message);
+        
+         return thunkAPI.rejectWithValue(error.response?.data || error. message)
+    }
+})
+
+
 
 const teacherSlice = createSlice({
     name : "teacherSlice",
@@ -153,6 +167,7 @@ const teacherSlice = createSlice({
     addStudentInfo : null,
     getSingleStudentInfo : null,
     editStudentInfo : null,
+    deleteStudentInfo : null,
     initialState : {
         loading : {
             teacherInfo : false,
@@ -164,7 +179,8 @@ const teacherSlice = createSlice({
             submitEditAttendance : false,
             addStudent : false,
             getSingleStudent : false,
-            editStudent : false
+            editStudent : false,
+            deleteStudent : false
         },
         error : {
              teacherInfo : null,
@@ -176,7 +192,8 @@ const teacherSlice = createSlice({
              submitEditAttendance : null,
              addStudent : null,
              getSingleStudent : null,
-             editStudent : null
+             editStudent : null,
+             deleteStudent : null
 
         }
     },
@@ -240,6 +257,12 @@ const teacherSlice = createSlice({
         },
         clearEditStudentError : (state)=>{
             state.error.editStudent = null
+        },
+        clearDeleteStudentInfo : (state)=>{
+            state.deleteStudentInfo = null
+        },
+        clearDeleteStudentError : (state)=>{
+            state.error.deleteStudent = null
         }
 
 
@@ -361,6 +384,17 @@ const teacherSlice = createSlice({
             state.loading.editStudent = false,
             state.error.editStudent = action.payload
         })
+        .addCase(deleteStudent.pending, (state)=>{
+            state.loading.deleteStudent = true
+        })
+        .addCase(deleteStudent.fulfilled, (state, action)=>{
+            state.loading.deleteStudent = false,
+            state.deleteStudentInfo = action.payload
+        })
+        .addCase(deleteStudent.rejected, (state, action)=>{
+            state.loading.deleteStudent = false,
+            state.error.deleteStudent = action.payload
+        })
 
     }
 })
@@ -385,7 +419,9 @@ export const {
     clearSingleStudentInfo,
     clearSingleStudentError,
     clearEditStudentInfo,
-    clearEditStudentError
+    clearEditStudentError,
+    clearDeleteStudentInfo,
+    clearDeleteStudentError
 } = teacherSlice.actions
 
 export default teacherSlice.reducer

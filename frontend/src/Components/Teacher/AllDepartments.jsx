@@ -7,7 +7,8 @@ import {
   clearAllDepartmentsInfo,
 } from "../../redux/slices/teacherSlice";
 import { toast } from "react-toastify";
-import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import Loading from "../Loading";
 
 const AllDepartments = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const AllDepartments = () => {
     error,
     departmentStudentsInfo,
     submitAttendanceInfo,
+    loading,
   } = useSelector((state) => state.teacher);
   // console.log("error:", error);
   // console.log("allDepartmentsInfo:", allDepartmentsInfo);
@@ -79,7 +81,7 @@ const AllDepartments = () => {
         `/teacher-dashboard/edit-attendance/${department.id}/${department.department_name}/${className.graduate}/${className.year}`,
       );
     }
-        if (type === "add-student") {
+    if (type === "add-student") {
       navigate(
         `/teacher-dashboard/add-student/${department.id}/${department.department_name}/${className.graduate}/${className.year}`,
       );
@@ -88,6 +90,11 @@ const AllDepartments = () => {
 
   return (
     <>
+      {loading.allDepartments && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/20">
+          <Loading />
+        </div>
+      )}
       <div className="department-container h-auto">
         <div className="flex flex-col items-center pt-20">
           {departmentsData?.map((department) => {
@@ -99,7 +106,7 @@ const AllDepartments = () => {
                 className="w-full text-xs lg:text-lg mb-20"
               >
                 <h3 className="text-center text-white border py-2 text-xl">
-                  {department.department_name}
+                  {department.department_name.toUpperCase()}
                 </h3>
 
                 <div className="w-full flex justify-evenly flex-wrap">
