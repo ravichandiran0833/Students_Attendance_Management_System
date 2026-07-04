@@ -22,6 +22,7 @@ import AddStudent from "./Components/Teacher/AddStudent";
 import AllDepartments from "./Components/Teacher/AllDepartments";
 import EditAttendance from "./Components/Teacher/EditAttendance";
 import EditStudent from "./Components/Teacher/EditStudent";
+import StudentViewAttendance from "./Components/Student/StudentViewAttendance";
 
 function App() {
   return (
@@ -32,6 +33,8 @@ function App() {
           <Route index element={<UserRole />}></Route>
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/teacher-login" element={<TeacherLogin />} />
+
+          <Route path="/student-view-attendance" element={<StudentViewAttendance/>}/>
 
           
 
