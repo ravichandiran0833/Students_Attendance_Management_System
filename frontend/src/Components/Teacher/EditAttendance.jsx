@@ -132,7 +132,8 @@ const EditAttendance = () => {
 
   return (
     <>
-      {loading.editAttendance && (
+    <div className="relative w-full min-h-screen">
+            {loading.editAttendance && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/20">
           <Loading />
         </div>
@@ -294,6 +295,7 @@ const EditAttendance = () => {
           </button>
         </div>
       </div>
+    </div>
     </>
   );
 };

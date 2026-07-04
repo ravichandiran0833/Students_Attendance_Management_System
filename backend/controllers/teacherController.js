@@ -103,7 +103,7 @@ export const teacherLogin = (req, res) => {
 
 export const allDepartments = async (req, res) => {
   try {
-    const sql = "select * from departments";
+    const sql = "select * from departments order by department_name asc";
     const [result] = await db.promise().query(sql);
 
     if (result.length === 0) {
@@ -692,3 +692,83 @@ export const deleteStudent = async(req, res)=>{
     
   }
 }
+
+export const dashboardDetails = async (req, res) => {
+  try {
+
+    const sql = `
+      SELECT
+          d.department_name,
+
+          SUM(
+            CASE
+              WHEN s.graduate = 'UG'
+              AND s.year = 'I'
+              THEN 1
+              ELSE 0
+            END
+          ) AS ug1,
+
+          SUM(
+            CASE
+              WHEN s.graduate = 'UG'
+              AND s.year = 'II'
+              THEN 1
+              ELSE 0
+            END
+          ) AS ug2,
+
+          SUM(
+            CASE
+              WHEN s.graduate = 'UG'
+              AND s.year = 'III'
+              THEN 1
+              ELSE 0
+            END
+          ) AS ug3,
+
+          SUM(
+            CASE
+              WHEN s.graduate = 'PG'
+              AND s.year = 'I'
+              THEN 1
+              ELSE 0
+            END
+          ) AS pg1,
+
+          SUM(
+            CASE
+              WHEN s.graduate = 'PG'
+              AND s.year = 'II'
+              THEN 1
+              ELSE 0
+            END
+          ) AS pg2,
+
+          COUNT(s.id) AS total_students
+
+      FROM departments d
+      LEFT JOIN students s
+          ON d.id = s.department_id
+
+      GROUP BY d.id, d.department_name
+
+      ORDER BY d.department_name;
+    `;
+
+    const [result] = await db.promise().query(sql);
+
+    return res.status(200).json({
+      success: true,
+      dashboardData: result,
+    });
+
+  } catch (error) {
+    console.log("dashboardDetails Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};

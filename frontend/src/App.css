@@ -212,3 +212,154 @@ width: 90%;
   animation: flowerBloom 2s ease-out forwards;
   opacity: 0;
 }
+
+
+
+
+
+.dashboard-title{
+    padding-top:30px;
+    /* font-size:20px; */
+    font-weight:bold;
+
+    background:linear-gradient(
+        90deg,
+        #a855f7,
+        #06b6d4,
+        #a855f7
+    );
+
+    background-size:200% auto;
+
+    -webkit-background-clip:text;
+    color:transparent;
+
+    animation:titleMove 3s linear infinite;
+}
+
+.dashboard-card{
+    position:relative;
+
+    /* width:200px; */
+    min-height:200px;
+
+    /* padding:25px; */
+
+    border-radius:20px;
+
+    background:#0b1120;
+
+    color:white;
+
+    overflow:hidden;
+
+    transition:0.4s;
+
+    animation:float 4s ease-in-out infinite;
+}
+
+/* Infinite Running Border */
+.dashboard-card::before{
+    content:"";
+
+    position:absolute;
+
+    inset:-200%;
+
+    background:
+        conic-gradient(
+            transparent,
+            #a855f7,
+            transparent,
+            #06b6d4,
+            transparent
+        );
+
+    animation:rotate 4s linear infinite;
+}
+
+.dashboard-card::after{
+    content:"";
+
+    position:absolute;
+
+    inset:2px;
+
+    background:#050816;
+
+    border-radius:18px;
+}
+
+.dashboard-card > *{
+    position:relative;
+    z-index:2;
+}
+
+.department-title{
+    font-size:20px;
+    font-weight:bold;
+
+    margin-bottom:20px;
+
+    color:#a855f7;
+}
+
+.dashboard-card p{
+    margin:12px 0;
+}
+
+.total{
+    margin-top:25px;
+
+    font-size:18px;
+
+    color:#06b6d4;
+
+    animation:pulse 2s infinite;
+}
+
+.dashboard-card:hover{
+    transform:
+        translateY(-10px)
+        scale(1.05);
+
+    box-shadow:
+        0 0 20px #a855f7,
+        0 0 40px #06b6d4;
+}
+
+@keyframes rotate{
+    from{
+        transform:rotate(0deg);
+    }
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+@keyframes float{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-10px);
+    }
+}
+
+@keyframes pulse{
+    0%,100%{
+        opacity:1;
+    }
+    50%{
+        opacity:.5;
+    }
+}
+
+@keyframes titleMove{
+    from{
+        background-position:0%;
+    }
+    to{
+        background-position:200%;
+    }
+}

@@ -59,7 +59,7 @@ export const TeacherDashboard = () => {
           </ul>
         </div>
 
-        <div className="flex-1 bg-amber-200">
+        <div className="flex-1">
           <Outlet />
         </div>
       </div>

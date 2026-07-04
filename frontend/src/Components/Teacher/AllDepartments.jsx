@@ -90,42 +90,45 @@ const AllDepartments = () => {
 
   return (
     <>
-      {loading.allDepartments && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/20">
-          <Loading />
-        </div>
-      )}
-      <div className="department-container h-auto">
-        <div className="flex flex-col items-center pt-20">
-          {departmentsData?.map((department) => {
-            const classes = getClasses(department);
+      <div className="relative w-full min-h-screen">
+        {loading.allDepartments && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/20">
+            <Loading />
+          </div>
+        )}
+        <div className="department-container h-auto min-h-screen">
+          <h1 className="text-center text-2xl text-white font-bold block border border-black shadow-[0_0_20px_blue] py-5">{type.toUpperCase()}</h1>
+          <div className="flex flex-col items-center pt-10 md:pt-15">
+            {departmentsData?.map((department) => {
+              const classes = getClasses(department);
 
-            return (
-              <div
-                key={department.id}
-                className="w-full text-xs lg:text-lg mb-20"
-              >
-                <h3 className="text-center text-white border py-2 text-xl">
-                  {department.department_name.toUpperCase()}
-                </h3>
+              return (
+                <div
+                  key={department.id}
+                  className="w-full text-xs lg:text-lg mb-20"
+                >
+                  <h3 className="text-center text-white border py-2 text-xl">
+                    {department.department_name.toUpperCase()}
+                  </h3>
 
-                <div className="w-full flex justify-evenly flex-wrap">
-                  {classes?.map((item, index) => (
-                    <div
-                      key={index}
-                      className="animate-flower mt-10 bg-white px-6 py-3 rounded font-bold cursor-pointer hover:bg-gray-500 hover:text-white animate-card transition delay-150 duration-500 ease-in-out hover:-translate-y-1 hover:scale-110"
-                      style={{ animationDelay: `${index * 300}ms` }}
-                      onClick={() => getSingleDepartment(department, item)}
-                    >
-                      <p>
-                        {item.graduate} - {item.year} Year
-                      </p>
-                    </div>
-                  ))}
+                  <div className="w-full flex justify-evenly flex-wrap">
+                    {classes?.map((item, index) => (
+                      <div
+                        key={index}
+                        className="animate-flower mt-10 bg-white px-6 py-3 rounded font-bold cursor-pointer hover:bg-gray-500 hover:text-white animate-card transition delay-150 duration-500 ease-in-out hover:-translate-y-1 hover:scale-110"
+                        style={{ animationDelay: `${index * 300}ms` }}
+                        onClick={() => getSingleDepartment(department, item)}
+                      >
+                        <p>
+                          {item.graduate} - {item.year} Year
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </>
