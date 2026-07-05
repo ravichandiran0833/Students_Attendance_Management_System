@@ -23,6 +23,8 @@ import AllDepartments from "./Components/Teacher/AllDepartments";
 import EditAttendance from "./Components/Teacher/EditAttendance";
 import EditStudent from "./Components/Teacher/EditStudent";
 import StudentViewAttendance from "./Components/Student/StudentViewAttendance";
+import { StudentLogin } from "./Components/Student/StudentLogin";
+import StudentProtectRoute from "./Components/Student/StudentProtectRoute";
 
 function App() {
   return (
@@ -33,10 +35,16 @@ function App() {
           <Route index element={<UserRole />}></Route>
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/teacher-login" element={<TeacherLogin />} />
+          <Route path="/student-login" element={<StudentLogin />} />
 
-          <Route path="/student-view-attendance" element={<StudentViewAttendance/>}/>
-
-          
+          <Route
+            path="/student-view-attendance"
+            element={
+              <StudentProtectRoute>
+                <StudentViewAttendance />
+              </StudentProtectRoute>
+            }
+          ></Route>
 
           <Route
             path="/teacher-dashboard"
@@ -57,12 +65,16 @@ function App() {
               path="view-students/:departmentName/:graduate/:year"
               element={<ViewStudents />}
             />
-            <Route path="edit-attendance/:departmentId/:departmentName/:graduate/:year" element={<EditAttendance/>}/>
-            <Route path="add-student/:departmentId/:departmentName/:graduate/:year" element={<AddStudent/>}/>
-            <Route path="edit-student/:registerNum" element={<EditStudent/>}/>
+            <Route
+              path="edit-attendance/:departmentId/:departmentName/:graduate/:year"
+              element={<EditAttendance />}
+            />
+            <Route
+              path="add-student/:departmentId/:departmentName/:graduate/:year"
+              element={<AddStudent />}
+            />
+            <Route path="edit-student/:registerNum" element={<EditStudent />} />
           </Route>
-
-
 
           <Route
             path="/admin-dashboard"

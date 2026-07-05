@@ -27,7 +27,7 @@ export const UserRole = () => {
             <p>Teacher</p>
           </div>
         </Link>
-        <Link to="/Student-login">
+        <Link to="/student-login">
            <div
             className="role-div px-4 py-2 text-center bg-white md:px-6 md:py-3 lg:px-6 lg:py-3 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.25)]  hover:-translate-y-2  delay-200 ease-in-out hover:shadow-[0_20px_40px_rgba(0,0,0,0.35)]
                   transition-all duration-300 "
