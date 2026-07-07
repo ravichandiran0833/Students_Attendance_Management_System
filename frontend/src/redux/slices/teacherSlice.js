@@ -231,6 +231,19 @@ export const dashboardDetails = createAsyncThunk(
   },
 );
 
+export const teacherViewAttendance = createAsyncThunk("teacher/teacherViewAttendance", async(data, thunkAPI)=>{
+  try {
+    const response = await axios.post(`${backendUrl}/api/auth/teacher/teacherViewAttendance`, data,{
+      withCredentials : true
+    })
+    return response.data
+  } catch (error) {
+    console.log("error:",error.response);
+    return thunkAPI.rejectWithValue(error.response?.data || error.message)
+    
+  }
+})
+
 const teacherSlice = createSlice({
   name: "teacherSlice",
   teacherInfo: null,
@@ -246,6 +259,7 @@ const teacherSlice = createSlice({
   editStudentInfo: null,
   deleteStudentInfo: null,
   dashboardDetailsInfo: null,
+  teacherViewAttendanceInfo : null,
   initialState: {
     loading: {
       teacherInfo: false,
@@ -260,6 +274,7 @@ const teacherSlice = createSlice({
       editStudent: false,
       deleteStudent: false,
       dashboardDetails : false,
+      teacherViewAttendance : false
     },
     error: {
       teacherInfo: null,
@@ -273,7 +288,8 @@ const teacherSlice = createSlice({
       getSingleStudent: null,
       editStudent: null,
       deleteStudent: null,
-      dashboardDetails : null
+      dashboardDetails : null,
+      teacherViewAttendance : null
     },
   },
   reducers: {
@@ -348,6 +364,12 @@ const teacherSlice = createSlice({
     },
     clearDashboardDetailsError : (state)=>{
         state.error.dashboardDetails = null
+    },
+    clearTeacherViewAttendanceInfo : (state)=>{
+      state.teacherViewAttendanceInfo = null
+    },
+    clearTeacherViewAttendanceError : (state)=>{
+      state.error.teacherViewAttendance = null
     }
   },
 
@@ -487,6 +509,17 @@ const teacherSlice = createSlice({
         state.loading.dashboardDetails = false,
         state.error.dashboardDetails = action.payload 
       })
+      .addCase(teacherViewAttendance.pending, (state)=>{
+        state.loading.teacherViewAttendance = true
+      })
+      .addCase(teacherViewAttendance.fulfilled, (state, action)=>{
+        state.loading.teacherViewAttendance = false,
+        state.teacherViewAttendanceInfo = action.payload
+      })
+      .addCase(teacherViewAttendance.rejected, (state, action)=>{
+        state.loading.teacherViewAttendance = false,
+        state.error.teacherViewAttendance = action.payload
+      })
   },
 });
 
@@ -514,7 +547,9 @@ export const {
   clearDeleteStudentInfo,
   clearDeleteStudentError,
   clearDashboardDetailsInfo,
-  clearDashboardDetailsError
+  clearDashboardDetailsError,
+  clearTeacherViewAttendanceInfo,
+  clearTeacherViewAttendanceError
 } = teacherSlice.actions;
 
 export default teacherSlice.reducer;

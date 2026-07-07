@@ -501,18 +501,9 @@ export const editStudent = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const {
-      registerNo,
-      name,
-      email,
-      gender,
-      phoneNumber,
-      password,
-    } = req.body;
+    const { registerNo, name, email, gender, phoneNumber, password } = req.body;
 
-   
-    const sql =
-      "SELECT profile_image, password FROM students WHERE id = ?";
+    const sql = "SELECT profile_image, password FROM students WHERE id = ?";
 
     const [student] = await db.promise().query(sql, [id]);
 
@@ -526,22 +517,18 @@ export const editStudent = async (req, res) => {
     let profileData = student[0].profile_image;
     let studentPassword = student[0].password;
 
-  
     if (req.file) {
       const oldProfile = student[0].profile_image;
 
-      const uploadResult =
-        await cloudinary.uploader.upload(req.file.path, {
-          folder: "student",
-        });
+      const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+        folder: "student",
+      });
 
       profileData = uploadResult.secure_url;
 
-   
       if (fs.existsSync(req.file.path)) {
         fs.unlinkSync(req.file.path);
       }
-
 
       if (oldProfile) {
         try {
@@ -549,27 +536,19 @@ export const editStudent = async (req, res) => {
           const file = parts.pop();
           const folder = parts.pop();
 
-          const publicId =
-            `${folder}/${file.split(".")[0]}`;
+          const publicId = `${folder}/${file.split(".")[0]}`;
 
           await cloudinary.uploader.destroy(publicId);
 
-          console.log(
-            "Old Cloudinary image deleted"
-          );
+          console.log("Old Cloudinary image deleted");
         } catch (err) {
-          console.log(
-            "Cloudinary delete error:",
-            err
-          );
+          console.log("Cloudinary delete error:", err);
         }
       }
     }
 
-  
     if (password && password.trim() !== "") {
-      studentPassword =
-        await bcrypt.hash(password, 10);
+      studentPassword = await bcrypt.hash(password, 10);
     }
 
     const updateSql = `
@@ -585,8 +564,9 @@ export const editStudent = async (req, res) => {
       WHERE id = ?
     `;
 
-    const [result] =
-      await db.promise().query(updateSql, [
+    const [result] = await db
+      .promise()
+      .query(updateSql, [
         registerNo,
         name,
         gender,
@@ -597,11 +577,11 @@ export const editStudent = async (req, res) => {
         id,
       ]);
 
-    if(result.affectedRows ===0){
+    if (result.affectedRows === 0) {
       return res.status(400).json({
-        success : false,
-        message : "Failed to Update Student"
-      })
+        success: false,
+        message: "Failed to Update Student",
+      });
     }
 
     return res.status(200).json({
@@ -611,10 +591,7 @@ export const editStudent = async (req, res) => {
   } catch (error) {
     console.log("Edit student error:", error);
 
-    if (
-      req.file?.path &&
-      fs.existsSync(req.file.path)
-    ) {
+    if (req.file?.path && fs.existsSync(req.file.path)) {
       fs.unlinkSync(req.file.path);
     }
 
@@ -625,77 +602,64 @@ export const editStudent = async (req, res) => {
   }
 };
 
-
-export const deleteStudent = async(req, res)=>{
+export const deleteStudent = async (req, res) => {
   try {
-    const {id} = req.params
+    const { id } = req.params;
 
+    const getProfileUrl = "select profile_image from students where id = ?";
+    const [profileData] = await db.promise().query(getProfileUrl, [id]);
 
-    const getProfileUrl = "select profile_image from students where id = ?"
-    const [profileData] = await db.promise().query(getProfileUrl, [id])
-
-       if (!profileData.length) {
+    if (!profileData.length) {
       return res.status(404).json({
         success: false,
         message: "Student not found",
       });
     }
 
-
-    const url = profileData[0]?.profile_image
+    const url = profileData[0]?.profile_image;
     console.log("url :", url);
-    
 
-     if (url) {
-        try {
-          const parts = url.split("/");
-          const file = parts.pop();
-          const folder = parts.pop();
+    if (url) {
+      try {
+        const parts = url.split("/");
+        const file = parts.pop();
+        const folder = parts.pop();
 
-          const publicId =
-            `${folder}/${file.split(".")[0]}`;
+        const publicId = `${folder}/${file.split(".")[0]}`;
 
-          await cloudinary.uploader.destroy(publicId);
+        await cloudinary.uploader.destroy(publicId);
 
-          console.log(
-            "Old Cloudinary image deleted"
-          );
-        } catch (err) {
-          console.log(
-            "Cloudinary delete error:",
-            err
-          );
-        }
+        console.log("Old Cloudinary image deleted");
+      } catch (err) {
+        console.log("Cloudinary delete error:", err);
       }
+    }
 
+    const sql = "delete from students where id = ?";
+    const [result] = await db.promise().query(sql, [id]);
 
-    const sql = "delete from students where id = ?"
-    const [result] = await db.promise().query(sql, [id])
-
-    if(result.affectedRows === 0){
+    if (result.affectedRows === 0) {
       return res.status(400).json({
-        success : false,
-        message : "Failed to Delete Student"
-      })
+        success: false,
+        message: "Failed to Delete Student",
+      });
     }
 
     return res.status(200).json({
-      success : true,
-      message : "Student Deleted SuccessFully"
-    })
+      success: true,
+      message: "Student Deleted SuccessFully",
+    });
   } catch (error) {
     console.log("error:", error);
     return res.status(500).json({
-      success : false,
-      message : "Server Error"
-    })
-    
+      success: false,
+      message: "Server Error",
+    });
   }
-}
+};
 
 export const dashboardDetails = async (req, res) => {
   try {
-
     const sql = `
       SELECT
           d.department_name,
@@ -762,7 +726,6 @@ export const dashboardDetails = async (req, res) => {
       success: true,
       dashboardData: result,
     });
-
   } catch (error) {
     console.log("dashboardDetails Error:", error);
 
@@ -770,5 +733,53 @@ export const dashboardDetails = async (req, res) => {
       success: false,
       message: "Server Error",
     });
+  }
+};
+
+export const teacherViewAttendance = async (req, res) => {
+  try {
+    // console.log("view attendance req.body :",req.body);
+    const { departmentId, departmentName, graduate, year } =
+      req.body;
+
+    const sql = `SELECT
+    s.student_name,
+	s.register_no,
+    a.status,
+    a.attendance_date
+FROM students s
+INNER JOIN departments d
+    ON s.department_id = d.id
+INNER JOIN attendance a
+    ON s.id = a.student_id
+WHERE
+    s.department_id = ?
+    AND s.department_name = ?
+    AND s.graduate = ?
+    AND s.year = ?
+ORDER BY
+    a.attendance_date ASC,
+    s.register_no ASC;`;
+
+    const [result] = await db.promise().query(sql, [departmentId, departmentName, graduate, year])
+    if(result.length === 0){
+      return res.status(200).json({
+        success : true,
+        message : "Attendance Data is Empty",
+        attendanceData : []
+      })
+    }
+
+    return res.status(200).json({
+      success : true,
+      attendanceData : result
+    })
+  } catch (error) {
+      console.log("error:",error);
+      return res.status(500).json({
+        success : false,
+        message : "Server Error"
+      })
+      
   }
 };

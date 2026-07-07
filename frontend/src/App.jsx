@@ -25,6 +25,7 @@ import EditStudent from "./Components/Teacher/EditStudent";
 import StudentViewAttendance from "./Components/Student/StudentViewAttendance";
 import { StudentLogin } from "./Components/Student/StudentLogin";
 import StudentProtectRoute from "./Components/Student/StudentProtectRoute";
+import TeacherViewAttendance from "./Components/Teacher/TeacherViewAttendance";
 
 function App() {
   return (
@@ -74,7 +75,10 @@ function App() {
               element={<AddStudent />}
             />
             <Route path="edit-student/:registerNum" element={<EditStudent />} />
+            <Route path="view-attendance/:departmentId/:departmentName/:graduate/:year" element={<TeacherViewAttendance/>}/>
           </Route>
+
+
 
           <Route
             path="/admin-dashboard"

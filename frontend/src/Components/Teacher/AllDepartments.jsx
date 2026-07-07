@@ -86,6 +86,11 @@ const AllDepartments = () => {
         `/teacher-dashboard/add-student/${department.id}/${department.department_name}/${className.graduate}/${className.year}`,
       );
     }
+    if (type === "view-attendance") {
+      navigate(
+        `/teacher-dashboard/view-attendance/${department.id}/${department.department_name}/${className.graduate}/${className.year}`,
+      );
+    }
   };
 
   return (
@@ -96,8 +101,10 @@ const AllDepartments = () => {
             <Loading />
           </div>
         )}
-        <div className="department-container h-auto min-h-screen">
-          <h1 className="text-center text-2xl text-white font-bold block border border-black shadow-[0_0_20px_blue] py-5">{type.toUpperCase()}</h1>
+        <div className="department-container h-auto min-h-screen ">
+          <h1 className="text-center text-2xl text-white font-bold block border border-black shadow-[0_0_20px_blue] py-5 sticky top-0 z-50 bg-[rgb(78,148,252)]">
+            {type.toUpperCase()}
+          </h1>
           <div className="flex flex-col items-center pt-10 md:pt-15">
             {departmentsData?.map((department) => {
               const classes = getClasses(department);
