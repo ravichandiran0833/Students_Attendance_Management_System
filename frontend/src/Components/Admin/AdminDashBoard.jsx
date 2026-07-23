@@ -13,8 +13,8 @@ export const AdminDashBoard = () => {
 
   const dispatch = useDispatch();
 
-  const adminSlice = useSelector((state) => state.admin);
-  console.log("dashboard adminSlice : ", adminSlice);
+  // const adminSlice = useSelector((state) => state.admin);
+  // console.log("dashboard adminSlice : ", adminSlice);
 
   const { adminWelcome, loading, error } = useSelector((state) => state.admin);
 

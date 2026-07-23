@@ -3,11 +3,13 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import cloudinary from "../config/cloudinary.js";
+import transporter from "../config/mail.js";
 import fs from "fs";
 dotenv.config();
 
+
 export const adminLogin = (req, res) => {
-  const { email, password, role } = req.body;
+  const { email, password } = req.body;
 
   if (!email) {
     return res.status(400).json({
@@ -15,23 +17,27 @@ export const adminLogin = (req, res) => {
       message: "Email is Required",
     });
   }
+
   if (!password) {
     return res.status(400).json({
       success: false,
       message: "Password is Required",
     });
   }
-  const sql = "select * from admins where email= ? and password = ?";
-  db.query(sql, [email, password], (err, result) => {
+
+  const sql = "SELECT * FROM admins WHERE email = ?";
+
+  db.query(sql, [email], async (err, result) => {
     if (err) {
-      console.log("err:", err);
+      console.log(err);
 
       return res.status(500).json({
         success: false,
         message: "Database Error",
       });
     }
-    if (result.length == 0) {
+
+    if (result.length === 0) {
       return res.status(401).json({
         success: false,
         message: "Wrong Email or Password",
@@ -39,6 +45,19 @@ export const adminLogin = (req, res) => {
     }
 
     const adminData = result[0];
+
+  
+    const isPasswordMatch = await bcrypt.compare(
+      password,
+      adminData.password
+    );
+
+    if (!isPasswordMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Wrong Email or Password",
+      });
+    }
 
     const token = jwt.sign(
       {
@@ -50,7 +69,7 @@ export const adminLogin = (req, res) => {
       process.env.JWT_SECRET_KEY,
       {
         expiresIn: "1d",
-      },
+      }
     );
 
     res.cookie("token", token, {
@@ -73,6 +92,8 @@ export const adminLogin = (req, res) => {
   });
 };
 
+
+
 export const checkAdmin = (req, res) => {
   return res.status(200).json({
     success: true,
@@ -83,8 +104,7 @@ export const checkAdmin = (req, res) => {
 export const addTeacher = async (req, res) => {
   const { name, email, password, department } = req.body;
 
-  console.log("req.body :",req.body);
-  
+  console.log("req.body :", req.body);
 
   if (!req.file) {
     return res.status(400).json({
@@ -569,3 +589,138 @@ export const deleteDepartment = (req, res) => {
     });
   }
 };
+
+export const sendOtp = async (req, res) => {
+  const { email } = req.body;
+
+  const [admin] = await db
+    .promise()
+    .query("SELECT * FROM admins WHERE email=?", [email]);
+
+  if (admin.length === 0) {
+    return res.status(400).json({
+      success: false,
+      message: "Email not found Enter Correct Email",
+    });
+  }
+
+  const otp = Math.floor(100000 + Math.random() * 900000);
+
+  const expires = new Date(Date.now() + 5 * 60 * 1000);
+
+  await db
+    .promise()
+    .query(
+      "INSERT INTO password_reset_otp(email,otp,expires_at) VALUES(?,?,?)",
+      [email, otp, expires],
+    );
+
+  await transporter.sendMail({
+    from: process.env.EMAIL,
+
+    to: email,
+
+    subject: "Password Reset OTP",
+
+    text: `Your OTP is ${otp}`,
+  });
+
+  res.json({
+    success: true,
+    message: "OTP Sent Successfully",
+  });
+};
+
+export const verifyOtp = async (req, res) => {
+  const { email, otpData } = req.body;
+
+  const [result] = await db.promise().query(
+    "SELECT * FROM password_reset_otp WHERE email=? AND otp=? ORDER BY id DESC LIMIT 1",
+
+    [email, otpData],
+  );
+
+  if (result.length === 0) {
+    return res.status(400).json({
+      success: false,
+
+      message: "Invalid OTP",
+    });
+  }
+
+  const record = result[0];
+
+  if (new Date() > new Date(record.expires_at)) {
+    return res.status(400).json({
+      success: false,
+
+      message: "OTP Expired",
+    });
+  }
+
+  await db.promise().query(
+    "UPDATE password_reset_otp SET verified=1 WHERE id=?",
+
+    [record.id],
+  );
+
+  res.status(200).json({
+    success: true,
+
+    message: "OTP Verified",
+    email : record.email
+  });
+};
+
+
+export const resetPassword=async(req,res)=>{
+
+const {email,newPassword}=req.body;
+
+const [otp]=await db.promise().query(
+
+"SELECT * FROM password_reset_otp WHERE email=? AND verified=1 ORDER BY id DESC LIMIT 1",
+
+[email]
+
+);
+
+if(otp.length===0){
+
+return res.status(400).json({
+
+success:false,
+
+message:"OTP Verification Required"
+
+});
+
+}
+
+const hashed=await bcrypt.hash(newPassword,10);
+
+await db.promise().query(
+
+"UPDATE admins SET password=? WHERE email=?",
+
+[hashed,email]
+
+);
+
+await db.promise().query(
+
+"DELETE FROM password_reset_otp WHERE email=?",
+
+[email]
+
+);
+
+res.status(200).json({
+
+success:true,
+
+message:"Password Updated Successfully"
+
+});
+
+}

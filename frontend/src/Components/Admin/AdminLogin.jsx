@@ -3,7 +3,7 @@ import { MdOutlineEmail } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { adminLogin, clearError } from "../../redux/slices/adminSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loading from "../Loading";
 export const AdminLogin = () => {
@@ -48,7 +48,13 @@ export const AdminLogin = () => {
       navigate("/admin-dashboard");
       dispatch(clearError());
     }
-  }, [adminInfo, dispatch, navigate]);
+    if(error){
+      toast.error(error.message,{
+        autoClose :2000
+      })
+      dispatch(clearError())
+    }
+  }, [adminInfo, dispatch, navigate,error]);
 
   return (
     <div className="relative w-full min-h-screen">
@@ -66,11 +72,11 @@ export const AdminLogin = () => {
           </h1>
           <form className="admin-form w-70 h-auto  mx-auto md:w-90  lg:w-100  flex  items-center flex-col  gap-10 py-10 px-5 rounded-xl shadow-[0_0_20px_whitesmoke]">
             <h1 className="text-xl lg:text-3xl text-white font-bold">Login</h1>
-            {error && (
+            {/* {error && (
               <p className="text-red-600 bg-white p-1 rounded text-xs md:text-lg">
                 {error.message}
               </p>
-            )}
+            )} */}
             <div className="w-full  relative ">
               <MdOutlineEmail className="absolute mt-3 ml-3 text-white focus:text-white" />
               <input
@@ -92,6 +98,7 @@ export const AdminLogin = () => {
                 value={adminData.password}
                 onChange={handleChange}
               ></input>
+              <Link to="/admin/forgot-password" className="text-white absolute right-0 mt-2">Forgot Password ?</Link>
             </div>
             <div className="">
               <input

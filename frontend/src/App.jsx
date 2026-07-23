@@ -26,6 +26,8 @@ import StudentViewAttendance from "./Components/Student/StudentViewAttendance";
 import { StudentLogin } from "./Components/Student/StudentLogin";
 import StudentProtectRoute from "./Components/Student/StudentProtectRoute";
 import TeacherViewAttendance from "./Components/Teacher/TeacherViewAttendance";
+import ForgotPassword from "./Components/Admin/ForgotPassword";
+import ChangePassword from "./Components/Admin/ChangePassword";
 
 function App() {
   return (
@@ -37,6 +39,10 @@ function App() {
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/teacher-login" element={<TeacherLogin />} />
           <Route path="/student-login" element={<StudentLogin />} />
+
+
+          <Route path="/admin/forgot-password" element={<ForgotPassword/>}/>
+          <Route path="/admin/change-password" element={<ChangePassword/>}/>
 
           <Route
             path="/student-view-attendance"

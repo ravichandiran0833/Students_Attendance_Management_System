@@ -237,6 +237,51 @@ export const deleteDepartment = createAsyncThunk(
   },
 );
 
+
+export const sendOtp = createAsyncThunk("admin/sendOtp", async(email, thunkAPI)=>{
+  try {
+    const response = await axios.post(`${backendUrl}/api/auth/admin/send-otp`, email,{
+      withCredentials : true
+    })
+    return response.data
+    // console.log("send otp response : ",response.data);
+    
+  } catch (error) {
+    console.log("error:",error.response);
+    return thunkAPI.rejectWithValue(error.response?.data || error.message)
+    
+  }
+})
+
+
+export const verifyOtp = createAsyncThunk("admin/verifyOtp", async({email,otpData}, thunkAPI)=>{
+  try {
+    const response = await axios.post(`${backendUrl}/api/auth/admin/verify-otp`, {email, otpData}, {
+      withCredentials : true
+    })
+    return response.data
+  } catch (error) {
+    console.log("error:",error.response);
+    return thunkAPI.rejectWithValue(error.response?.data || error.message)
+    
+  }
+})
+
+
+export const resetPassword = createAsyncThunk("admin/resetPassword", async({email,newPassword}, thunkAPI)=>{
+  try {
+    const response = await axios.patch(`${backendUrl}/api/auth/admin/reset-password`,{email, newPassword},{
+      withCredentials : true
+    })
+    return response.data
+  } catch (error) {
+    console.log("error:",error.response);
+    return thunkAPI.rejectWithValue(error.response?.data || error.message)
+    
+  }
+})
+
+
 const adminSlice = createSlice({
   name: "adminSlice",
   initialState: {
@@ -253,6 +298,9 @@ const adminSlice = createSlice({
       singleDepartment: false,
       editDepartment: false,
       deleteDepartment: false,
+      sendOtp : false,
+      verifyOtp : false,
+      resetPassword : false,
     },
     adminInfo: null,
     adminWelcome: null,
@@ -266,6 +314,9 @@ const adminSlice = createSlice({
     singleDepartmentInfo: null,
     editDepartmentInfo: null,
     deleteDepartmentInfo: null,
+    otpInfo : null,
+    verifyOtpInfo : null,
+    resetPasswordInfo : null,
     error: null,
   },
   reducers: {
@@ -305,6 +356,15 @@ const adminSlice = createSlice({
     clearDeleteDepartmentInfo: (state) => {
       state.deleteDepartmentInfo = null;
     },
+    clearOtpInfo : (state)=>{
+      state.otpInfo = null
+    },
+    clearVerifyOtpInfo : (state)=>{
+      state.verifyOtpInfo = null
+    },
+    clearResetPasswordInfo : (state)=>{
+      state.resetPasswordInfo = null
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -438,7 +498,40 @@ const adminSlice = createSlice({
       .addCase(deleteDepartment.rejected, (state, action) => {
         ((state.loading.deleteDepartment = false),
           (state.error = action.payload));
-      });
+      })
+      .addCase(sendOtp.pending, (state)=>{
+        state.loading.sendOtp = true
+      })
+      .addCase(sendOtp.fulfilled, (state,action)=>{
+        state.loading.sendOtp = false,
+        state.otpInfo = action.payload
+      })
+      .addCase(sendOtp.rejected, (state, action)=>{
+        state.loading.sendOtp = false,
+        state.error = action.payload
+      })
+      .addCase(verifyOtp.pending, (state)=>{
+        state.loading.verifyOtp = true
+      })
+      .addCase(verifyOtp.fulfilled, (state, action)=>{
+        state.loading.verifyOtp = false,
+        state.verifyOtpInfo = action.payload
+      })
+      .addCase(verifyOtp.rejected, (state, action)=>{
+        state.loading.verifyOtp = false,
+        state.error = action.payload
+      })
+      .addCase(resetPassword.pending, (state)=>{
+        state.loading.resetPassword = true
+      })
+      .addCase(resetPassword.fulfilled, (state, action)=>{
+        state.loading.resetPassword = false,
+        state.resetPasswordInfo = action.payload
+      })
+      .addCase(resetPassword.rejected, (state, action)=>{
+        state.loading.resetPassword = false,
+        state.error = action.payload
+      })
   },
 });
 
@@ -455,6 +548,9 @@ export const {
   clearEditDepartmentInfo,
   clearSingleDepartmentInfo,
   clearDeleteDepartmentInfo,
+  clearOtpInfo,
+  clearVerifyOtpInfo,
+  clearResetPasswordInfo
 } = adminSlice.actions;
 
 export default adminSlice.reducer;

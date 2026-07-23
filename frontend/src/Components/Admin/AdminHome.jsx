@@ -24,7 +24,7 @@ export const AdminHome = () => {
   } = useSelector((state) => state.admin);
 
   const teachersData = AllTeachersData?.teachersData || [];
-  console.log("Admin home teachersData :", teachersData);
+  // console.log("Admin home teachersData :", teachersData);
 
   const departmentsData = getAllDepartmentsInfo?.departmentsData || [];
 

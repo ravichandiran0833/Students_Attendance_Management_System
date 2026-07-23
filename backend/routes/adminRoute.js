@@ -1,5 +1,5 @@
 import express from "express"
-import {addDepartment, addTeacher, adminLogin, checkAdmin, deleteDepartment, deleteTeacher, editDepartment, editTeacher, getAllDepartments, singleDepartment, singleteacher, viewTeachers} from '../controllers/adminController.js'
+import {addDepartment, addTeacher, adminLogin, checkAdmin, deleteDepartment, deleteTeacher, editDepartment, editTeacher, getAllDepartments, resetPassword, sendOtp, singleDepartment, singleteacher, verifyOtp, viewTeachers} from '../controllers/adminController.js'
 import authenticate from "../middleware/adminAuthentication.js"
 import adminAuthorize from "../middleware/adminAuthorization.js"
 import upload from "../middleware/upload.js"
@@ -8,7 +8,15 @@ import { uploadImage } from "../middleware/uploadImage.js"
 
 const router = express.Router() 
 
+
+
 router.post("/login", adminLogin)
+router.post("/send-otp", sendOtp)
+router.post("/verify-otp", verifyOtp)
+router.patch("/reset-password", resetPassword)
+
+
+
 
 router.use(authenticate)
 router.use(adminAuthorize("admin"))
