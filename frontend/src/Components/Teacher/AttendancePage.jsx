@@ -10,8 +10,9 @@ import {
 } from "../../redux/slices/teacherSlice";
 import { toast } from "react-toastify";
 import Loading from "../Loading";
-
+import useDocumentTitle from "../../hooks/useDocumnetTitle";
 export const AttendancePage = () => {
+  useDocumentTitle("Attendance Page")
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { departmentId, departmentName, graduate, year } = useParams();
@@ -114,17 +115,13 @@ export const AttendancePage = () => {
             <Loading />
           </div>
         )}
-        <div className="w-full min-h-screen flex flex-col items-center gap-5 lg:gap-10 py-10 ">
+        <div className={`w-full min-h-screen flex flex-col items-center gap-5 lg:gap-10 py-10 transition-opacity duration-300 ${loading.submitAttendance ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
           <h1 className="text-xl lg:text-3xl font-bold">Today Attendance</h1>
           <p className="text-md lg:text-xl">
             {departmentName.toUpperCase()} - {graduate} {year} Year
           </p>
           <div className="w-full flex items-center justify-center flex-col px-10">
-            {/* <Link to="/view-students">
-            <button className="bg-orange-500 text-white px-4 py-2 text-xs md:text-lg lg:px-6 lg:py-3 rounded-xl my-5 cursor-pointer hover:bg-blue-500">
-              <p>View Students Only</p>
-            </button>
-          </Link> */}
+
             <table className="w-full border-collapse border border-gray-300 shadow-md rounded-lg overflow-hidden ">
               <thead className="bg-blue-600 text-white">
                 <tr>

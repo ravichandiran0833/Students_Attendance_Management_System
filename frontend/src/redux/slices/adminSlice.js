@@ -281,6 +281,19 @@ export const resetPassword = createAsyncThunk("admin/resetPassword", async({emai
   }
 })
 
+export const totalStudentsCount = createAsyncThunk("admin/totalStudentsCount", async(_, thunkAPI)=>{
+  try {
+    const response = await axios.get(`${backendUrl}/api/auth/admin/totalStudents`,{
+      withCredentials : true
+    })
+    return response.data
+  } catch (error) {
+    console.log("error:",error);
+    return thunkAPI.rejectWithValue(error.response?.data || error.message)
+    
+  }
+})
+
 
 const adminSlice = createSlice({
   name: "adminSlice",
@@ -301,6 +314,7 @@ const adminSlice = createSlice({
       sendOtp : false,
       verifyOtp : false,
       resetPassword : false,
+      totalStudentsCount : false
     },
     adminInfo: null,
     adminWelcome: null,
@@ -318,6 +332,8 @@ const adminSlice = createSlice({
     verifyOtpInfo : null,
     resetPasswordInfo : null,
     error: null,
+    totalStudentsCountInfo : null,
+    isAuthenticated : false
   },
   reducers: {
     clearteacherInfo: (state) => {
@@ -364,7 +380,12 @@ const adminSlice = createSlice({
     },
     clearResetPasswordInfo : (state)=>{
       state.resetPasswordInfo = null
-    }
+    },
+    clearAdminInfo : (state)=>{
+      state.adminInfo = null
+    },
+
+
   },
   extraReducers: (builder) => {
     builder
@@ -375,6 +396,7 @@ const adminSlice = createSlice({
       .addCase(adminLogin.fulfilled, (state, action) => {
         state.loading.adminLogin = false;
         state.adminInfo = action.payload;
+        state.isAuthenticated = true
       })
       .addCase(adminLogin.rejected, (state, action) => {
         state.loading.adminLogin = false;
@@ -532,6 +554,17 @@ const adminSlice = createSlice({
         state.loading.resetPassword = false,
         state.error = action.payload
       })
+      .addCase(totalStudentsCount.pending, (state)=>{
+        state.loading.totalStudentsCount = true
+      })
+      .addCase(totalStudentsCount.fulfilled, (state, action)=>{
+        state.loading.totalStudentsCount = false,
+        state.totalStudentsCountInfo = action.payload
+      })
+      .addCase(totalStudentsCount.rejected, (state, action)=>{
+        state.loading.totalStudentsCount = false,
+        state.error = action.payload
+      })
   },
 });
 
@@ -550,7 +583,8 @@ export const {
   clearDeleteDepartmentInfo,
   clearOtpInfo,
   clearVerifyOtpInfo,
-  clearResetPasswordInfo
+  clearResetPasswordInfo,
+  clearAdminInfo
 } = adminSlice.actions;
 
 export default adminSlice.reducer;

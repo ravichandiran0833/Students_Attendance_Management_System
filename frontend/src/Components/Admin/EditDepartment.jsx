@@ -10,7 +10,9 @@ import {
 import Loading from "../Loading";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import useDocumentTitle from "../../hooks/useDocumnetTitle";
 const EditDepartment = () => {
+  useDocumentTitle("Edit Department")
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -44,7 +46,9 @@ const EditDepartment = () => {
     }
 
     if (editDepartmentInfo?.success) {
-      toast.success(editDepartmentInfo.message);
+      toast.success(editDepartmentInfo.message,{
+        autoClose : 2000
+      });
       navigate("../view-departments");
       dispatch(clearEditDepartmentInfo());
     }
@@ -95,7 +99,7 @@ const EditDepartment = () => {
   return (
     <>
       <div className="relative w-full min-h-screen">
-        {loading.editDepartment || loading.singleDepartment && (
+        {(loading.editDepartment || loading.singleDepartment) && (
           <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/20">
             <Loading />
           </div>

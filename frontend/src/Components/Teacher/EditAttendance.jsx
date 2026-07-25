@@ -11,8 +11,9 @@ import {
 } from "../../redux/slices/teacherSlice";
 import { toast } from "react-toastify";
 import Loading from "../Loading";
-
+import useDocumentTitle from "../../hooks/useDocumnetTitle";
 const EditAttendance = () => {
+  useDocumentTitle("Edit Attendance")
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { departmentId, departmentName, graduate, year } = useParams();
@@ -138,7 +139,7 @@ const EditAttendance = () => {
           <Loading />
         </div>
       )}
-      <div className="w-full min-h-screen flex flex-col items-center gap-5 lg:gap-10 py-10 ">
+      <div className={`w-full min-h-screen flex flex-col items-center gap-5 lg:gap-10 py-10 transition-opacity duration-300 ${loading.editAttendance ? "opacity-50 pointer-events-none" : "opacity-100"} `}>
         <h1 className="text-xl lg:text-3xl font-bold">Edit Attendance</h1>
         <p className="text-md lg:text-xl">
           {departmentName.toUpperCase()} - {graduate} {year} Year

@@ -5,11 +5,14 @@ import {
   clearError,
   clearSingleTeacher,
   getAllDepartments,
+  totalStudentsCount,
   viewTeachers,
 } from "../../redux/slices/adminSlice";
 import Loading from "../Loading";
 import { toast } from "react-toastify";
+import useDocumentTitle from "../../hooks/useDocumnetTitle";
 export const AdminHome = () => {
+  useDocumentTitle("Admin Home")
   const dispatch = useDispatch();
 
   const adminSlice = useSelector((state) => state.admin);
@@ -20,6 +23,7 @@ export const AdminHome = () => {
     loading,
     singleTeacher,
     getAllDepartmentsInfo,
+    totalStudentsCountInfo,
     error,
   } = useSelector((state) => state.admin);
 
@@ -27,10 +31,12 @@ export const AdminHome = () => {
   // console.log("Admin home teachersData :", teachersData);
 
   const departmentsData = getAllDepartmentsInfo?.departmentsData || [];
+  const totalStudents = totalStudentsCountInfo?.studentsCount || 0
 
   useEffect(() => {
     dispatch(viewTeachers());
     dispatch(getAllDepartments());
+    dispatch(totalStudentsCount())
   }, [dispatch]);
 
   useEffect(() => {
@@ -59,7 +65,7 @@ export const AdminHome = () => {
           </div>
           <div className="bg-green-400 w-50 py-5 lg:w-70 lg:py-20 text-center  text-white lg:text-xl font-bold shadow-[0_0_10px_whitesmoke] border border-gray-300 rounded admin-box3-animation">
             <p>Total Students</p>
-            <span>20</span>
+            <span>{totalStudents}</span>
           </div>
         </div>
       </div>

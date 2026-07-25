@@ -6,7 +6,9 @@ import { toast } from 'react-toastify';
 import { clearError, clearResetPasswordInfo, clearVerifyOtpInfo, resetPassword } from '../../redux/slices/adminSlice';
 import Loading from '../Loading';
 import { useNavigate } from 'react-router-dom';
+import useDocumentTitle from '../../hooks/useDocumnetTitle';
 const ChangePassword = () => {
+  useDocumentTitle("Change Password")
     const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
 
@@ -61,12 +63,7 @@ const ChangePassword = () => {
             Change Password
           </h1>
           <form className="admin-form w-70 h-auto  mx-auto md:w-90  lg:w-100  flex  items-center flex-col  gap-10 py-10 px-5 rounded-xl shadow-[0_0_20px_whitesmoke]">
-            {/* <h1 className="text-xl lg:text-3xl text-white font-bold">Login</h1> */}
-            {/* {error && (
-              <p className="text-red-600 bg-white p-1 rounded text-xs md:text-lg">
-                {error.message}
-              </p>
-            )} */}
+
             <div className="w-full  relative ">
               <label className='text-white ml-5'>Enter New Password</label>
              <RiLockPasswordLine className="absolute mt-3 ml-3 text-white" />

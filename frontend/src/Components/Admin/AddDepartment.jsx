@@ -8,8 +8,12 @@ import {
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Loading from "../Loading";
+import useDocumentTitle from "../../hooks/useDocumnetTitle"
 
 export const AddDepartment = () => {
+
+  useDocumentTitle("Add Department")
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { departmentInfo, error, loading } = useSelector(

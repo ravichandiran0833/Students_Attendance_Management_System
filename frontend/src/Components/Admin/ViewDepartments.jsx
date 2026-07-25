@@ -10,7 +10,9 @@ import {
   getAllDepartments,
 } from "../../redux/slices/adminSlice";
 import Loading from "../Loading";
+import useDocumentTitle from "../../hooks/useDocumnetTitle";
 const ViewDepartments = () => {
+  useDocumentTitle("View Departments")
   const [search, setSearch] = useState("");
 
   const dispatch = useDispatch();

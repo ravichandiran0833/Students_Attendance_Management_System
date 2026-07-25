@@ -8,7 +8,11 @@ import {
 } from "../../redux/slices/adminSlice";
 import { toast } from "react-toastify";
 import Loading from "../Loading";
+
+
 export const AdminDashBoard = () => {
+
+
   const location = useLocation();
 
   const dispatch = useDispatch();
@@ -33,10 +37,10 @@ export const AdminDashBoard = () => {
       dispatch(clearAdminWelcome());
     }
 
-    // if(error){
-    //   toast.error(error.message || error)
-    //   dispatch(clearError())
-    // }
+    if(error){
+      toast.error(error.message || error)
+      dispatch(clearError())
+    }
   }, [adminWelcome, dispatch, error]);
 
   return (

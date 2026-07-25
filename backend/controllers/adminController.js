@@ -7,7 +7,6 @@ import transporter from "../config/mail.js";
 import fs from "fs";
 dotenv.config();
 
-
 export const adminLogin = (req, res) => {
   const { email, password } = req.body;
 
@@ -46,11 +45,7 @@ export const adminLogin = (req, res) => {
 
     const adminData = result[0];
 
-  
-    const isPasswordMatch = await bcrypt.compare(
-      password,
-      adminData.password
-    );
+    const isPasswordMatch = await bcrypt.compare(password, adminData.password);
 
     if (!isPasswordMatch) {
       return res.status(401).json({
@@ -69,7 +64,7 @@ export const adminLogin = (req, res) => {
       process.env.JWT_SECRET_KEY,
       {
         expiresIn: "1d",
-      }
+      },
     );
 
     res.cookie("token", token, {
@@ -91,8 +86,6 @@ export const adminLogin = (req, res) => {
     });
   });
 };
-
-
 
 export const checkAdmin = (req, res) => {
   return res.status(200).json({
@@ -668,59 +661,61 @@ export const verifyOtp = async (req, res) => {
     success: true,
 
     message: "OTP Verified",
-    email : record.email
+    email: record.email,
   });
 };
 
+export const resetPassword = async (req, res) => {
+  const { email, newPassword } = req.body;
 
-export const resetPassword=async(req,res)=>{
+  const [otp] = await db.promise().query(
+    "SELECT * FROM password_reset_otp WHERE email=? AND verified=1 ORDER BY id DESC LIMIT 1",
 
-const {email,newPassword}=req.body;
+    [email],
+  );
 
-const [otp]=await db.promise().query(
+  if (otp.length === 0) {
+    return res.status(400).json({
+      success: false,
 
-"SELECT * FROM password_reset_otp WHERE email=? AND verified=1 ORDER BY id DESC LIMIT 1",
+      message: "OTP Verification Required",
+    });
+  }
 
-[email]
+  const hashed = await bcrypt.hash(newPassword, 10);
 
-);
+  await db.promise().query(
+    "UPDATE admins SET password=? WHERE email=?",
 
-if(otp.length===0){
+    [hashed, email],
+  );
 
-return res.status(400).json({
+  await db.promise().query(
+    "DELETE FROM password_reset_otp WHERE email=?",
 
-success:false,
+    [email],
+  );
 
-message:"OTP Verification Required"
+  res.status(200).json({
+    success: true,
 
-});
+    message: "Password Updated Successfully",
+  });
+};
 
-}
-
-const hashed=await bcrypt.hash(newPassword,10);
-
-await db.promise().query(
-
-"UPDATE admins SET password=? WHERE email=?",
-
-[hashed,email]
-
-);
-
-await db.promise().query(
-
-"DELETE FROM password_reset_otp WHERE email=?",
-
-[email]
-
-);
-
-res.status(200).json({
-
-success:true,
-
-message:"Password Updated Successfully"
-
-});
-
-}
+export const totalStudentsCount = async (req, res) => {
+  try {
+    const sql = "select count(*) as totalStudents from students";
+    const [count] = await db.promise().query(sql);
+    return res.status(200).json({
+      success : true,
+      studentsCount : count[0].totalStudents
+    })
+  } catch (error) {
+    console.log("error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};

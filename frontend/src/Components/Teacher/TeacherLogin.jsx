@@ -10,7 +10,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loading from "../Loading";
+import useDocumentTitle from "../../hooks/useDocumnetTitle";
 export const TeacherLogin = () => {
+  useDocumentTitle("Teacher Login")
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

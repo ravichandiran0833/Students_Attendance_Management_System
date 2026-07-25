@@ -7,8 +7,10 @@ import {
 } from "../../redux/slices/teacherSlice";
 import { toast } from "react-toastify";
 import Loading from "../Loading";
+import useDocumentTitle from "../../hooks/useDocumnetTitle";
 
 const TeacherHome = () => {
+  useDocumentTitle("Teacher Home")
   const dispatch = useDispatch();
 
   const { dashboardDetailsInfo, loading, error } = useSelector(
@@ -90,34 +92,3 @@ const TeacherHome = () => {
 
 export default TeacherHome;
 
-{
-  /* <div className="w-full min-h-screen">
-        <h1 className="text-center">Teacher Dashboard</h1>
-        <div className="flex flex-wrap justify-evenly py-15 md:py-30 gap-8">
-          <div className="border">
-            <p className="text-center ">English</p>
-            <p>Ug : 10</p>
-            <p>Ug : 10</p>
-            <p>Ug : 10</p>
-            <p>Ug : 10</p>
-            <p>Total Students : 100</p>
-          </div>
-          <div className="border">
-            <p className="text-center ">English</p>
-            <p>Ug : 10</p>
-            <p>Ug : 10</p>
-            <p>Ug : 10</p>
-            <p>Ug : 10</p>
-            <p>Total Students : 100</p>
-          </div>
-          <div className="border">
-            <p className="text-center ">English</p>
-            <p>Ug : 10</p>
-            <p>Ug : 10</p>
-            <p>Ug : 10</p>
-            <p>Ug : 10</p>
-            <p>Total Students : 100</p>
-          </div>
-        </div>
-      </div> */
-}

@@ -11,8 +11,10 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loading from "../Loading";
+import useDocumentTitle from "../../hooks/useDocumnetTitle";
 
 const EditStudent = () => {
+  useDocumentTitle("Edit Student")
   const teacherSlice = useSelector((state) => state.teacher);
   console.log("teacherSlice :", teacherSlice);
 
@@ -243,4 +245,3 @@ const EditStudent = () => {
 
 export default EditStudent;
 
-// ${loading.addStudent ? "opacity-50 pointer-events-none" : "opacity-100"}

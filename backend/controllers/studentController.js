@@ -26,7 +26,7 @@ export const studentLogin = async (req, res) => {
     const [result] = await db.promise().query(sql, [email]);
 
     if (result.length === 0) {
-      return res.status(201).json({
+      return res.status(400).json({
         success: false,
         message: "Wrong Email",
       });
@@ -34,7 +34,7 @@ export const studentLogin = async (req, res) => {
     const studentData = result[0];
     const passwordMatch = await bcrypt.compare(password, studentData.password);
     if (!passwordMatch) {
-      return res.status(201).json({
+      return res.status(400).json({
         success: false,
         message: "Wrong Password",
       });

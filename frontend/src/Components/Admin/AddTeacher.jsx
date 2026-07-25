@@ -10,7 +10,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import Loading from "../Loading";
 import { toast } from "react-toastify";
+import useDocumentTitle from "../../hooks/useDocumnetTitle";
+
+
 export const AddTeacher = () => {
+
+  useDocumentTitle("Add Teacher")
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -94,7 +100,7 @@ export const AddTeacher = () => {
   return (
     <>
       <div className="relative w-full min-h-screen">
-        {loading.addTeacher || loading.getAllDepartments && (
+        {(loading.addTeacher || loading.getAllDepartments) && (
           <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/20">
             <Loading />
           </div>

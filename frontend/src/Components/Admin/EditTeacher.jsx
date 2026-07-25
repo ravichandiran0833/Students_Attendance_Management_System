@@ -13,7 +13,9 @@ import {
 import Loading from "../Loading";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import useDocumentTitle from "../../hooks/useDocumnetTitle";
 const EditTeacher = () => {
+  useDocumentTitle("Edit Teacher")
   const {
     singleTeacher,
     loading,

@@ -9,8 +9,9 @@ import {
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import Loading from "../Loading";
-
+import useDocumentTitle from "../../hooks/useDocumnetTitle"
 const AllDepartments = () => {
+  useDocumentTitle("All Departments")
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

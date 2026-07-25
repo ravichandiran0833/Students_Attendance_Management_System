@@ -6,7 +6,9 @@ import { clearError, clearOtpInfo, sendOtp, verifyOtp } from "../../redux/slices
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom"
 import Loading from "../../Components/Loading"
+import useDocumentTitle from "../../hooks/useDocumnetTitle";
 const ForgotPassword = () => {
+  useDocumentTitle("Forgot Password")
   const [email, setEmail] = useState("");
   const [otpData, setOtpData] = useState("")
 
@@ -117,4 +119,4 @@ const ForgotPassword = () => {
 
 export default ForgotPassword;
 
-// ${loading.adminLogin ? "opacity-50 pointer-events-none" : "opacity-100"}
+

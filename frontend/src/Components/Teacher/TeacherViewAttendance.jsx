@@ -8,7 +8,9 @@ import {
 } from "../../redux/slices/teacherSlice";
 import { toast } from "react-toastify";
 import Loading from "../Loading";
+import useDocumentTitle from "../../hooks/useDocumnetTitle";
 const TeacherViewAttendance = () => {
+  useDocumentTitle("View Attendnace")
   const { teacherViewAttendanceInfo, loading, error } = useSelector(
     (state) => state.teacher,
   );

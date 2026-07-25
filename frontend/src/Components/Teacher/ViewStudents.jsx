@@ -11,7 +11,9 @@ import {
 } from "../../redux/slices/teacherSlice";
 import { toast } from "react-toastify";
 import Loading from "../Loading";
+import useDocumentTitle from "../../hooks/useDocumnetTitle";
 const ViewStudents = () => {
+  useDocumentTitle("View Students")
   const teacherSlice = useSelector((state) => state.teacher);
   console.log("teacherSlice :", teacherSlice);
 
@@ -177,4 +179,3 @@ const ViewStudents = () => {
 
 export default ViewStudents;
 
-// ${loading.getAllDepartments || loading.deleteDepartment ? "opacity-50 pointer-events-none" : "opacity-100"}

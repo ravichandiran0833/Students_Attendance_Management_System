@@ -8,8 +8,9 @@ import {
 } from "../../redux/slices/teacherSlice";
 import { toast } from "react-toastify";
 import Loading from "../Loading";
-
+import useDocumentTitle from "../../hooks/useDocumnetTitle"
 const AddStudent = () => {
+  useDocumentTitle("Add Student")
   const { departmentId, departmentName, graduate, year } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -124,7 +125,7 @@ const AddStudent = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              {/* md:gap-2 my-4  md:flex-row */}
+             
 
               <div className="flex flex-col md:flex-row md:gap-4">
                 <label className="md:w-40">Gender</label>

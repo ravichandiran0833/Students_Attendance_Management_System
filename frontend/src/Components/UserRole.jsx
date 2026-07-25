@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import useDocumentTitle from "../hooks/useDocumnetTitle";
 export const UserRole = () => {
+  useDocumentTitle("Students Attendance Management System")
   return (
     <div className="user-role-container text-white h-screen w-screen flex flex-col  items-center">
       <h1 className="text-xl w-full m-10  text-center md:text-2xl lg:text-3xl font-bold md:m-20  lg:m-20">

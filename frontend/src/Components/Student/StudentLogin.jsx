@@ -6,14 +6,19 @@ import { useNavigate } from "react-router-dom"
 import Loading from "../Loading";
 import { clearStudentLoginError, clearStudentLoginInfo, clearStudentLoginStatus, studentLogin } from "../../redux/slices/studentSlice";
 import { toast } from "react-toastify"
-
+import useDocumentTitle from "../../hooks/useDocumnetTitle"
 
 export const StudentLogin = () => {
+
+useDocumentTitle("Student Login")
 
 const dispatch = useDispatch()
 const navigate = useNavigate()
 
 const {studentLoginInfo, loading, error} = useSelector((state)=>state.student)
+
+console.log("error:",error);
+
 
 const studentSlice = useSelector((state)=>state.student)
 console.log("studentSlice :",studentSlice);

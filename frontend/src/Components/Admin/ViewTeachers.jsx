@@ -11,7 +11,10 @@ import {
   viewTeachers,
 } from "../../redux/slices/adminSlice";
 
+import useDocumentTitle from "../../hooks/useDocumnetTitle";
+
 export const ViewTeachers = () => {
+  useDocumentTitle("View Teachers")
   const [search, setSearch] = useState("");
   console.log("serach :", search);
 

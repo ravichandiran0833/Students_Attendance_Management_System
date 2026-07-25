@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import { MdOutlineEmail } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
-import { adminLogin, clearError } from "../../redux/slices/adminSlice";
+import { adminLogin, clearAdminInfo, clearError } from "../../redux/slices/adminSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loading from "../Loading";
+import useDocumentTitle from "../../hooks/useDocumnetTitle";
+
 export const AdminLogin = () => {
+  useDocumentTitle("Admin Login")
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -46,6 +49,7 @@ export const AdminLogin = () => {
         autoClose: 1000,
       });
       navigate("/admin-dashboard");
+      dispatch(clearAdminInfo())
       dispatch(clearError());
     }
     if(error){
